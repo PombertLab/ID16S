@@ -17,14 +17,16 @@ OPTIONAL
 
 INSTALLATION
 
-1) git clone XXXX
+1) git clone https://github.com/PombertLab/Microbiomes.git
 
 2) Downloading databases:
-bash download_DBs.sh ## Downloads the NCBI Microbial/Taxonomy databases and dump files in current directory
+cd Microbiomes
+chmod a+x *.pl *.sh
+./download_DBs.sh ## Downloads the NCBI Microbial/Taxonomy databases and dump files in current directory
 
 3) The NCBI Taxonomy database variable must be set in the environmental variables:
-export BLASTDB=$BLASTDB:/path/to/TaxDB
-export BLASTDB=$BLASTDB:/path/to/NCBI_16S ## Optional - Adding the 16S DB too 
+pwd ## print working directory
+export BLASTDB=$BLASTDB:/path/to/working/directory/TaxDB
 
 STEPS
 1) Basecalling with Albacore (optional)
@@ -33,10 +35,6 @@ STEPS
 4) Summarizing the results with taxid_dist.pl
 
 EXAMPLE
-chmod a+x *.pl *.sh
-./download_DBs.sh
-pwd ## print working directory
-export BLASTDB=$BLASTDB:/path/to/working/directory/TaxDB
 ./fastq2fasta.pl Examples/*.fastq
 ./megablast.pl -k megablast -q Examples/*.fasta -d NCBI_16S/16SMicrobial -e 1e-05 -c 10 -t 10
 ./taxid_dist.pl -n TaxDumps/nodes.dmp -a TaxDumps/names.dmp -b Examples/*.megablast -e 1e-75 -h 1
