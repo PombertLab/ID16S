@@ -1,4 +1,5 @@
 #!/usr/bin/bash
+## Downloads databases and files from NCBI
 
 NCBI_16S=NCBI_16S/
 TaxDB=TaxDB/

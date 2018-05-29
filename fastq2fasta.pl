@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 ## Pombert Lab, 2018
+## Converts FASTQ files to FASTA format (no quality scores)
 
 use strict;
 use warnings;
