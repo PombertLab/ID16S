@@ -34,7 +34,13 @@ STEPS
 3) Megablastn analyses against the Microbial 16S database
 4) Summarizing the results with taxid_dist.pl
 
-EXAMPLE
+EXAMPLES
+a) megablast
 ./fastq2fasta.pl Examples/*.fastq
 ./megablast.pl -k megablast -q Examples/*.fasta -d NCBI_16S/16SMicrobial -e 1e-05 -c 10 -t 10
 ./taxid_dist.pl -n TaxDumps/nodes.dmp -a TaxDumps/names.dmp -b Examples/*.megablast -e 1e-75 -h 1
+
+b) blastn
+./fastq2fasta.pl Examples/*.fastq
+./megablast.pl -k blastn -q Examples/*.fasta -d NCBI_16S/16SMicrobial -e 1e-05 -c 10 -t 10
+./taxid_dist.pl -n TaxDumps/nodes.dmp -a TaxDumps/names.dmp -b Examples/*.blastn -e 1e-75 -h 1
