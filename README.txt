@@ -31,13 +31,13 @@ export BLASTDB=$BLASTDB:/path/to/working/directory/TaxDB
 STEPS
 1) Basecalling with Albacore (optional)
 2) FASTQ to FASTA conversion
-3) Megablastn analyses against the Microbial 16S database
+3) Megablastn analyses against the Microbial 16S database (16S_ribosomal_RNA.tar.gz in NCBI v5)
 4) Summarizing the results with taxid_dist.pl
 
 EXAMPLES
 a) megablast
 ./fastq2fasta.pl Examples/*.fastq
-./megablast.pl -k megablast -q Examples/*.fasta -d NCBI_16S/16SMicrobial -e 1e-05 -c 10 -t 10
+./megablast.pl -k megablast -q Examples/*.fasta -d NCBI_16S/16S_ribosomal_RNA -e 1e-05 -c 10 -t 10
 ./taxid_dist.pl -n TaxDumps/nodes.dmp -a TaxDumps/names.dmp -b Examples/*.megablast -e 1e-75 -h 1
 
 b) blastn

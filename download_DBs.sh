@@ -1,5 +1,6 @@
 #!/usr/bin/bash
 ## Downloads databases and files from NCBI
+## Version 0.2
 
 NCBI_16S=NCBI_16S/
 TaxDB=TaxDB/
@@ -8,9 +9,9 @@ TaxDumps=TaxDumps/
 mkdir $NCBI_16S $TaxDB $TaxDumps
 echo "Downloading NCBI 16S Database"
 cd $NCBI_16S;
-wget ftp://ftp.ncbi.nih.gov/blast/db/16SMicrobial.tar.gz
-tar -zxvf 16SMicrobial.tar.gz
-rm 16SMicrobial.tar.gz
+wget ftp://ftp.ncbi.nih.gov/blast/db/16S_ribosomal_RNA.tar.gz
+tar -zxvf 16S_ribosomal_RNA.tar.gz
+rm 16S_ribosomal_RNA.tar.gz
 
 echo "Downloading NCBI Taxonomy Database"
 cd ../$TaxDB
