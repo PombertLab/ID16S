@@ -8,12 +8,12 @@ This pipeline should work on all 16S datasets but longer sequencing reads are pr
 REQUIREMENTS
 - Perl
 - BLAST+: ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/
-- NCBI 16S Microbial database: ftp://ftp.ncbi.nih.gov/blast/db/16SMicrobial.tar.gz
+- NCBI 16S Microbial database: ftp://ftp.ncbi.nih.gov/blast/db/16S_ribosomal_RNA.tar.gz
 - NCBI Taxonomy database: ftp://ftp.ncbi.nih.gov/blast/db/taxdb.tar.gz
 - NCBI Taxonomy dumps: ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz
 
 OPTIONAL
-- albacore (for FAST5 basecalling) - https://nanoporetech.com/
+- guppy (for FAST5 basecalling) - https://nanoporetech.com/
 
 INSTALLATION
 
