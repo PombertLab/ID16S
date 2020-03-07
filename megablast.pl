@@ -10,11 +10,11 @@ use Getopt::Long qw(GetOptions);
 my $usage = "
 USAGE = perl megablastn.pl [options]
 
-EXAMPLE: megablast.pl -k megablast -q Examples/sample_1.fasta -d NCBI_16S/16SMicrobial -e 1e-05 -c 10 -t 10
+EXAMPLE: megablast.pl -k megablast -q Examples/sample_1.fasta -d NCBI_16S/16S_ribosomal_RNA -e 1e-05 -c 10 -t 10
 
 OPTIONS:
 -k (--task)		megablast, dc-megablast, blastn [default = megablast]
--d (--db)		NCBI 16S Microbial Database to query [default = XXX]
+-d (--db)		NCBI 16S Microbial Database to query [default = 16S_ribosomal_RNA]
 -t (--threads)	CPUs to use [default = 10]
 -e (--evalue)	1e-05, 1e-10 or other [default = 1e-05]
 -c (--culling)	culling limit [default = 10]
@@ -25,7 +25,7 @@ die "$usage\n" unless@ARGV;
 
 ## Defining options
 my $task = 'megablast';
-my $db = 'nr';
+my $db = '16S_ribosomal_RNA';
 my $threads = '2';
 my $evalue = '1e-05';
 my $culling = '1';
