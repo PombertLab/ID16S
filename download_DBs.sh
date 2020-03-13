@@ -8,7 +8,7 @@ TaxDumps=TaxDumps/
 
 mkdir $NCBI_16S $TaxDB $TaxDumps
 echo "Downloading NCBI 16S Database"
-cd $NCBI_16S;
+cd $NCBI_16S/
 wget ftp://ftp.ncbi.nih.gov/blast/db/16S_ribosomal_RNA.tar.gz
 tar -zxvf 16S_ribosomal_RNA.tar.gz
 rm 16S_ribosomal_RNA.tar.gz
