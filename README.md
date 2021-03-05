@@ -40,14 +40,40 @@ export BLASTDB=$BLASTDB:/path/to/working/directory/TaxDB
 ## EXAMPLES
 #### a) megablast
 ```Bash
-./fastq2fasta.pl Examples/*.fastq
-./megablast.pl -k megablast -q Examples/*.fasta -d NCBI_16S/16S_ribosomal_RNA -e 1e-05 -c 10 -t 10
-./taxid_dist.pl -n TaxDumps/nodes.dmp -a TaxDumps/names.dmp -b Examples/*.megablast -e 1e-75 -h 1
+fastq2fasta.pl Examples/*.fastq
+
+megablast.pl \
+   -k megablast \
+   -q Examples/*.fasta \
+   -d NCBI_16S/16S_ribosomal_RNA \
+   -e 1e-05 \
+   -c 10 \
+   -t 10
+
+taxid_dist.pl \
+   -n TaxDumps/nodes.dmp \
+   -a TaxDumps/names.dmp \
+   -b Examples/*.megablast \
+   -e 1e-75 \
+   -h 1
 ```
 
 #### b) blastn
 ```Bash
-./fastq2fasta.pl Examples/*.fastq
-./megablast.pl -k blastn -q Examples/*.fasta -d NCBI_16S/16SMicrobial -e 1e-05 -c 10 -t 10
-./taxid_dist.pl -n TaxDumps/nodes.dmp -a TaxDumps/names.dmp -b Examples/*.blastn -e 1e-75 -h 1
+fastq2fasta.pl Examples/*.fastq
+
+megablast.pl \
+   -k blastn \
+   -q Examples/*.fasta \
+   -d NCBI_16S/16SMicrobial \
+   -e 1e-05 \
+   -c 10 \
+   -t 10
+
+taxid_dist.pl \
+   -n TaxDumps/nodes.dmp \
+   -a TaxDumps/names.dmp \
+   -b Examples/*.blastn \
+   -e 1e-75 \
+   -h 1
 ```
