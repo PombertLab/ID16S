@@ -1,9 +1,5 @@
 ## SYNOPSIS
-This pipeline reconstructs the composition of bacterial species from a multifasta file of 16S sequences.
-Inferences are derived from BLAST homology searches against the NCBI 16S Microbial database.
-This pipeline was tested on Nanopore 1D reads obtained with the 16S Barcoding Kit (SQK-RAB204).
-Identification accuracy parallels that of the Nanopore sequencing reads.
-This pipeline should work on all 16S datasets but longer sequencing reads are preferable. 
+This pipeline reconstructs the composition of bacterial species from a multifasta file of 16S sequences. Inferences are derived from BLAST homology searches against the NCBI 16S Microbial database. This pipeline was tested on Nanopore 1D reads obtained with the 16S Barcoding Kit (SQK-RAB204). Identification accuracy parallels that of the Nanopore sequencing reads. This pipeline should work on all 16S datasets but longer sequencing reads are preferable. 
 
 ## REQUIREMENTS
 - Perl
