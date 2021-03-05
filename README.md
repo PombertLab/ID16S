@@ -20,13 +20,13 @@ This pipeline should work on all 16S datasets but longer sequencing reads are pr
 1) git clone https://github.com/PombertLab/Microbiomes.git
 
 2) Downloading databases:
-```
+```Bash
 cd Microbiomes/
 ./download_DBs.sh ## Downloads the NCBI Microbial/Taxonomy databases and dump files in current directory
 ```
 
 3) The NCBI Taxonomy database variable must be set in the environmental variables:
-```
+```Bash
 pwd ## print working directory
 export BLASTDB=$BLASTDB:/path/to/working/directory/TaxDB
 ```
@@ -39,14 +39,14 @@ export BLASTDB=$BLASTDB:/path/to/working/directory/TaxDB
 
 ## EXAMPLES
 #### a) megablast
-```
+```Bash
 ./fastq2fasta.pl Examples/*.fastq
 ./megablast.pl -k megablast -q Examples/*.fasta -d NCBI_16S/16S_ribosomal_RNA -e 1e-05 -c 10 -t 10
 ./taxid_dist.pl -n TaxDumps/nodes.dmp -a TaxDumps/names.dmp -b Examples/*.megablast -e 1e-75 -h 1
 ```
 
 #### b) blastn
-```
+```Bash
 ./fastq2fasta.pl Examples/*.fastq
 ./megablast.pl -k blastn -q Examples/*.fasta -d NCBI_16S/16SMicrobial -e 1e-05 -c 10 -t 10
 ./taxid_dist.pl -n TaxDumps/nodes.dmp -a TaxDumps/names.dmp -b Examples/*.blastn -e 1e-75 -h 1
