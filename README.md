@@ -20,13 +20,16 @@ This pipeline should work on all 16S datasets but longer sequencing reads are pr
 1) git clone https://github.com/PombertLab/Microbiomes.git
 
 2) Downloading databases:
-cd Microbiomes
-chmod a+x *.pl *.sh
+```
+cd Microbiomes/
 ./download_DBs.sh ## Downloads the NCBI Microbial/Taxonomy databases and dump files in current directory
+```
 
 3) The NCBI Taxonomy database variable must be set in the environmental variables:
+```
 pwd ## print working directory
 export BLASTDB=$BLASTDB:/path/to/working/directory/TaxDB
+```
 
 ## STEPS
 1) Basecalling with guppy (optional)
