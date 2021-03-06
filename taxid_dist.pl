@@ -1,38 +1,47 @@
 #!/usr/bin/perl
 ## Pombert Lab, 2018
-## This script generates a distribution of sequences per species, genus, family and so forth from taxonomised BLAST output files.
-## This script was created to handle megablast analyses of nanopore 16S amplicon sequencing.
-## Because of the error-rate of the nanopore sequencing, identification at the species/subspecies level can be ambiguous and should not be taken at face value.
-## Values at the genus level should be more accurate given the observed error-rate of the technology.
-## Requires ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz
-## v 0.1
+my $name = 'taxid_dist.pl';
+my $version = '0.2';
+my $updated = '06/03/2021';
 
-use strict;
-#use warnings;
+use strict; #use warnings;
 use Getopt::Long qw(GetOptions);
 
 ### Defining options
-my $options = <<'OPTIONS';
+my $options = <<"OPTIONS";
+NAME		${name}
+VERSION		${version}
+UPDATED		${updated}
 
-EXAMPLE: taxid_dist.pl -n TaxDumps/nodes.dmp -a TaxDumps/names.dmp -b Examples/*.blastn -e 1e-75 -h 1
+SYNOPSIS	Generates a distribution of sequences per species, genus, family and so forth from taxonomized BLAST output files.
+		This script was created to handle megablast analyses of nanopore 16S amplicon sequencing. Because of the error
+		rate of nanopore sequencing, identification at the species/subspecies level can be ambiguous and should not be
+		taken at face value. Values at the genus level should be more accurate.
 
-NOTE: requires the following BLAST format: -outfmt '6 qseqid sseqid pident length bitscore evalue staxids sskingdoms sscinames sblastnames'
+REQUIREMENTS	- ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz
+		- BLAST outfmt: -outfmt '6 qseqid sseqid pident length bitscore evalue staxids sskingdoms sscinames sblastnames'
 
+COMMAND		${name} \\
+		  -n TaxDumps/nodes.dmp \\
+		  -a TaxDumps/names.dmp \\
+		  -b Examples/*.blastn \\
+		  -e 1e-75 \\
+		  -h 1
+
+OPTIONS:
 -n (--nodes)	NCBI nodes.dmp file 
 -a (--names)	NCBI names.dmp
 -b (--blast)	NCBI blast output file(s) in oufmt 6 format
 -e (--evalue)	evalue cutoff [Default: 1e-75]
 -h (--hits)	Number of BLAST hits to keep; top N hits [Default: 1]
-
 OPTIONS
-die "$options" unless @ARGV;
+die "\n$options\n" unless @ARGV;
 
 my $node;
 my $name;
 my @blast = ();
 my $evalue = 1e-75;
 my $hits = 1;
-
 GetOptions(
 	'n|nodes=s' => \$node,
 	'a|names=s' => \$name,
