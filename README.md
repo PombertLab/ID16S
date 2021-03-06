@@ -3,10 +3,10 @@ This pipeline reconstructs the composition of bacterial species from a multifast
 
 ## REQUIREMENTS
 - [Perl 5](https://www.perl.org/)
-- [BLAST+](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)
-- [NCBI 16S Microbial database](ftp://ftp.ncbi.nih.gov/blast/db/16S_ribosomal_RNA.tar.gz)
-- [NCBI Taxonomy database](ftp://ftp.ncbi.nih.gov/blast/db/taxdb.tar.gz)
-- [NCBI Taxonomy dumps](ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz)
+- [BLAST+] - ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/
+- [NCBI 16S Microbial database] - ftp://ftp.ncbi.nih.gov/blast/db/16S_ribosomal_RNA.tar.gz
+- [NCBI Taxonomy database] - ftp://ftp.ncbi.nih.gov/blast/db/taxdb.tar.gz
+- [NCBI Taxonomy dumps] - ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz
 
 #### OPTIONAL
 - [guppy](https://nanoporetech.com/) (for FAST5 basecalling)
