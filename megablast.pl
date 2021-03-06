@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT 2018
 my $name = 'megablast.pl';
-my $version = '0.2';
+my $version = '0.2a';
 my $updated = '06/03/2021';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
@@ -56,14 +56,14 @@ while (my $tmp = shift@query){
 	system "echo Running $task on $tmp...";
 	system "blastn -task $task -num_threads $threads -query $tmp -db $db -evalue $evalue -culling_limit $culling -outfmt '6 qseqid sseqid pident length bitscore evalue staxids sskingdoms sscinames sblastnames' -out $tmp.$task";
 	system "echo Checking for sequences in $tmp with no hits using $task against $db...";
-	open BLAST, "<$tmp.$task";
+	open BLAST, "<", "$tmp.$task" or die "Can't read file $tmp.$task $!\n";
 	my %db;
 	while (my $line = <BLAST>){
 		my @array = split("\t", $line);
 		$db{$array[0]} = $array[1];
 	}
-	open FASTA, "<$tmp";
-	open NOHIT, ">$tmp.$task.nohit";
+	open FASTA, "<", "$tmp" or die "Can't read file $tmp $!\n";
+	open NOHIT, ">", "$tmp.$task.nohit" or die "Can't write to file $tmp.$task.nohit $!\n";
 	while (my $line = <FASTA>){
 		chomp $line;
 		if ($line =~ /^>(\S+)/){
