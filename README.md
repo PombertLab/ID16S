@@ -2,14 +2,14 @@
 This pipeline reconstructs the composition of bacterial species from a multifasta file of 16S sequences. Inferences are derived from BLAST homology searches against the NCBI 16S Microbial database. This pipeline was tested on Nanopore 1D reads obtained with the 16S Barcoding Kit (SQK-RAB204). Identification accuracy parallels that of the Nanopore sequencing reads. This pipeline should work on all 16S datasets but longer sequencing reads are preferable. 
 
 ## REQUIREMENTS
-- Perl
-- BLAST+: ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/
-- NCBI 16S Microbial database: ftp://ftp.ncbi.nih.gov/blast/db/16S_ribosomal_RNA.tar.gz
-- NCBI Taxonomy database: ftp://ftp.ncbi.nih.gov/blast/db/taxdb.tar.gz
-- NCBI Taxonomy dumps: ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz
+- [Perl 5](https://www.perl.org/)
+- [BLAST+](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)
+- [NCBI 16S Microbial database](ftp://ftp.ncbi.nih.gov/blast/db/16S_ribosomal_RNA.tar.gz)
+- [NCBI Taxonomy database](ftp://ftp.ncbi.nih.gov/blast/db/taxdb.tar.gz)
+- [NCBI Taxonomy dumps](ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz)
 
 #### OPTIONAL
-- guppy (for FAST5 basecalling) - https://nanoporetech.com/
+- [guppy](https://nanoporetech.com/) (for FAST5 basecalling)
 
 ## INSTALLATION
 
