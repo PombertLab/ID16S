@@ -12,16 +12,19 @@ This pipeline reconstructs the composition of bacterial species from a multifast
 - [guppy](https://nanoporetech.com/) (for FAST5 basecalling)
 
 ## INSTALLATION
-
-1) git clone https://github.com/PombertLab/Microbiomes.git
-
-2) Downloading databases:
+To download from the command line with Git, then add to the $PATH variable (for the current session), type:
 ```Bash
+git clone https://github.com/PombertLab/Microbiomes.git
 cd Microbiomes/
-./download_DBs.sh ## Downloads the NCBI Microbial/Taxonomy databases and dump files in current directory
+export PATH=$PATH:$(pwd)
 ```
 
-3) The NCBI Taxonomy database variable must be set in the environmental variables:
+To downloading NCBI databases:
+```Bash
+download_DBs.sh ## Downloads the NCBI Microbial/Taxonomy databases and dump files in current directory
+```
+
+The NCBI Taxonomy database variable must be set in the environmental variables:
 ```Bash
 pwd ## print working directory
 export BLASTDB=$BLASTDB:/path/to/working/directory/TaxDB
