@@ -1,16 +1,27 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT 2018
-## Requires BLAST 2.2.28+ or later and the NCBI taxonomy database (ftp://ftp.ncbi.nlm.nih.gov/blast/db/taxdb.tar.gz)
-## The BLASTDB variable must be set in the environmental variables: export BLASTDB=/path/to/NCBI/TaxDB
+my $name = 'megablast.pl';
+my $version = '0.2';
+my $updated = '06/03/2021';
 
-use strict;
-use warnings;
-use Getopt::Long qw(GetOptions);
+use strict; use warnings; use Getopt::Long qw(GetOptions);
 
-my $usage = "
-USAGE = perl megablastn.pl [options]
+my $usage = <<"OPTIONS";
+NAME		${name}
+VERSION		${version}
+UPDATED		${updated}
+SYNOPSIS	Performs homology searches using BLAST with and returns results with taxonomic metadata
 
-EXAMPLE: megablast.pl -k megablast -q Examples/sample_1.fasta -d NCBI_16S/16S_ribosomal_RNA -e 1e-05 -c 10 -t 10
+REQUIREMENTS	BLAST 2.2.28+ or later and the NCBI taxonomy database (ftp://ftp.ncbi.nlm.nih.gov/blast/db/taxdb.tar.gz)
+			The BLASTDB variable must be set in the environmental variables: export BLASTDB=/path/to/NCBI/TaxDB
+
+USAGE		${name} \\
+			-k megablast \\
+			-q Examples/sample_1.fasta \\
+			-d NCBI_16S/16S_ribosomal_RNA \\
+			-e 1e-05 \\
+			-c 10 \\
+			-t 10
 
 OPTIONS:
 -k (--task)		megablast, dc-megablast, blastn [default = megablast]
@@ -19,9 +30,8 @@ OPTIONS:
 -e (--evalue)	1e-05, 1e-10 or other [default = 1e-05]
 -c (--culling)	culling limit [default = 10]
 -q (--query)		fasta file(s) to be queried
-";
-
-die "$usage\n" unless@ARGV;
+OPTIONS
+die "\n$usage\n" unless@ARGV;
 
 ## Defining options
 my $task = 'megablast';
