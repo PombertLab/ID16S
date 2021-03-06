@@ -19,7 +19,7 @@ cd Microbiomes/
 export PATH=$PATH:$(pwd)
 ```
 
-To downloading NCBI databases:
+To download the required NCBI databases:
 ```Bash
 download_DBs.sh ## Downloads the NCBI Microbial/Taxonomy databases and dump files in current directory
 ```
