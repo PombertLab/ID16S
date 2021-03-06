@@ -10,26 +10,27 @@ my $usage = <<"OPTIONS";
 NAME		${name}
 VERSION		${version}
 UPDATED		${updated}
-SYNOPSIS	Performs homology searches using BLAST with and returns results with taxonomic metadata
+SYNOPSIS	Performs homology searches using BLAST and returns results with taxonomic metadata
 
-REQUIREMENTS	BLAST 2.2.28+ or later and the NCBI taxonomy database (ftp://ftp.ncbi.nlm.nih.gov/blast/db/taxdb.tar.gz)
-			The BLASTDB variable must be set in the environmental variables: export BLASTDB=/path/to/NCBI/TaxDB
+REQUIREMENTS	- BLAST 2.2.28+ or later
+		- NCBI taxonomy database (ftp://ftp.ncbi.nlm.nih.gov/blast/db/taxdb.tar.gz)
+		- The BLASTDB variable must be set: export BLASTDB=/path/to/NCBI/TaxDB
 
 USAGE		${name} \\
-			-k megablast \\
-			-q Examples/sample_1.fasta \\
-			-d NCBI_16S/16S_ribosomal_RNA \\
-			-e 1e-05 \\
-			-c 10 \\
-			-t 10
+		  -k megablast \\
+		  -q Examples/sample_1.fasta \\
+		  -d NCBI_16S/16S_ribosomal_RNA \\
+		  -e 1e-05 \\
+		  -c 10 \\
+		  -t 10
 
 OPTIONS:
--k (--task)		megablast, dc-megablast, blastn [default = megablast]
--d (--db)		NCBI 16S Microbial Database to query [default = 16S_ribosomal_RNA]
+-k (--task)	megablast, dc-megablast, blastn [default = megablast]
+-d (--db)	NCBI 16S Microbial Database to query [default = 16S_ribosomal_RNA]
 -t (--threads)	CPUs to use [default = 10]
 -e (--evalue)	1e-05, 1e-10 or other [default = 1e-05]
 -c (--culling)	culling limit [default = 10]
--q (--query)		fasta file(s) to be queried
+-q (--query)	fasta file(s) to be queried
 OPTIONS
 die "\n$usage\n" unless@ARGV;
 
