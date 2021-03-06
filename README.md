@@ -12,7 +12,7 @@ This pipeline reconstructs the composition of bacterial species from a multifast
 - [guppy](https://nanoporetech.com/) (for FAST5 basecalling)
 
 ## INSTALLATION
-To download from the command line with Git, then add to the $PATH variable (for the current session), type:
+To download this pipeline from the command line with Git, then add it to the $PATH variable (for the current session), type:
 ```Bash
 git clone https://github.com/PombertLab/Microbiomes.git
 cd Microbiomes/
@@ -26,8 +26,9 @@ download_DBs.sh ## Downloads the NCBI Microbial/Taxonomy databases and dump file
 
 The NCBI Taxonomy database variable must be set in the environmental variables:
 ```Bash
-pwd ## print working directory
-export BLASTDB=$BLASTDB:/path/to/working/directory/TaxDB
+cd TaxDB/
+export BLASTDB=$BLASTDB:$(pwd)
+cd ../
 ```
 
 ## STEPS
@@ -39,7 +40,7 @@ export BLASTDB=$BLASTDB:/path/to/working/directory/TaxDB
 ## EXAMPLES
 #### a) megablast
 ```Bash
-fastq2fasta.pl Examples/*.fastq
+fastq2fasta.pl -f Examples/*.fastq
 
 megablast.pl \
    -k megablast \
