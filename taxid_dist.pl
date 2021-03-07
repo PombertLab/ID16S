@@ -57,10 +57,10 @@ print "Initializing taxonomic IDs...\n";
 while (my $line = <NAMES>){
 	chomp $line; $line =~ s/\t\|//g;
 	if ($line =~ /scientific name/){
-        my @columns = split("\t", $line);
-        my $txid = $columns[0];
-        my $description = $columns[1];
-        $taxid{$txid} = $description;
+		my @columns = split("\t", $line);
+		my $txid = $columns[0];
+		my $description = $columns[1];
+		$taxid{$txid} = $description;
 	}
 }
 
