@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab, 2018
 my $name = 'taxid_dist.pl';
-my $version = '0.4';
-my $updated = '06/03/2021';
+my $version = '0.5';
+my $updated = '09/03/2021';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 
@@ -23,7 +23,7 @@ REQUIREMENTS	- ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz
 COMMAND		${name} \\
 		  -n TaxDumps/nodes.dmp \\
 		  -a TaxDumps/names.dmp \\
-		  -b Examples/*.blastn \\
+		  -b Examples/*.megablast \\
 		  -e 1e-75 \\
 		  -h 1
 
@@ -118,29 +118,23 @@ while (my $blast = shift@blast){
 				if (exists $ranks{'norank'}{$staxids}){$blasts{'norank'}{$staxids} += 1; $counts{'norank'}++;}
 				elsif (exists $ranks{'subspecies'}{$staxids}){ subspecies(); }
 				elsif (exists $ranks{'species'}{$staxids}){ species(); }
-				else {
-					print "WARNING: Taxonomy ID $staxids isn't a species, subspecies, or incertae sedis.";
-					if (exists $ranks{'strain'}{$staxids}){print " txid$staxids is a strain";}
-					print "\n";
-					## Would need to implement a sub for strains, stuctures look off though
-				}
+				elsif (exists $ranks{'strain'}{$staxids}){ strains(); }
+				else { print " txid$staxids taxonomic rank is unclear: $taxid{$staxids}\n"; }
 			}
 			else{
 				$bhits{$query} = 1;
 				if (exists $ranks{'norank'}{$staxids}){$blasts{'norank'}{$staxids} += 1; $counts{'norank'}++;}
 				elsif (exists $ranks{'subspecies'}{$staxids}){ subspecies(); }
 				elsif (exists $ranks{'species'}{$staxids}){ species(); }
-				else {
-					print "WARNING: Taxonomy ID $staxids isn't a species, subspecies, or incertae sedis.";
-					if (exists $ranks{'strain'}){print " txid$staxids is a strain";}
-					print "\n";
-					## Would need to implement a sub for strains, stuctures look off though
-				}
+				elsif (exists $ranks{'strain'}){ strains(); }
+				else { print " txid$staxids taxonomic rank is unclear: $taxid{$staxids}\n"; }
 			}
 		}
 	}
+
+	## Working on output files
 	my $size;
-	my @ext = ('subspecies', 'species', 'genus', 'family', 'order', 'class', 'phylum', 'norank');
+	my @ext = ('subspecies', 'strain', 'species', 'genus', 'family', 'order', 'class', 'phylum', 'norank');
 	for my $ext (@ext){
 		if ($counts{$ext}){
 			open OUT, ">", "$blast.$ext";
@@ -150,16 +144,26 @@ while (my $blast = shift@blast){
 				print OUT "$taxid{$_}\t$_\t$blasts{$ext}{$_}\t$av\n";
 			}
 		}
-		else {
-			print "No data found for rank: $ext\n";
-		}
+		else { print "No data found for taxonomic rank: $ext\n"; }
 	}
 }
 
 ## Subroutines
-sub subspecies{
+sub subspecies{ 
 	no warnings; ## Removing unnecessary verbosity is species is not defined.
+	## Autoincrement subspecies, then its parents (species, genus, family...) + autoincrementing them
 	$blasts{'subspecies'}{$staxids} += 1; $counts{'subspecies'}++;
+	$blasts{'species'}{$ranks{'subspecies'}{$staxids}[1]} += 1; $counts{'species'}++;
+	$blasts{'bgenus'}{$ranks{'species'}{$ranks{'subspecies'}{$staxids}[1]}[1]} += 1; $counts{'genus'}++;
+	$blasts{'family'}{$ranks{'genus'}{$ranks{'species'}{$ranks{'subspecies'}{$staxids}[1]}[1]}[1]} += 1; $counts{'family'}++;
+	$blasts{'order'}{$ranks{'family'}{$ranks{'genus'}{$ranks{'species'}{$ranks{'subspecies'}{$staxids}[1]}[1]}[1]}[1]} += 1; $counts{'order'}++;
+	$blasts{'class'}{$ranks{'order'}{$ranks{'family'}{$ranks{'genus'}{$ranks{'species'}{$ranks{'subspecies'}{$staxids}[1]}[1]}[1]}[1]}[1]} += 1; $counts{'class'}++;
+	$blasts{'phylum'}{$ranks{'class'}{$ranks{'order'}{$ranks{'family'}{$ranks{'genus'}{$ranks{'species'}{$ranks{'subspecies'}{$staxids}[1]}[1]}[1]}[1]}[1]}[1]} += 1; $counts{'phylum'}++;
+}
+sub strains{ 
+	no warnings; ## Removing unnecessary verbosity is species is not defined.
+	## Autoincrement strain, then its parents (species, genus, family...) + autoincrementing them
+	$blasts{'strain'}{$staxids} += 1; $counts{'strain'}++;
 	$blasts{'species'}{$ranks{'subspecies'}{$staxids}[1]} += 1; $counts{'species'}++;
 	$blasts{'bgenus'}{$ranks{'species'}{$ranks{'subspecies'}{$staxids}[1]}[1]} += 1; $counts{'genus'}++;
 	$blasts{'family'}{$ranks{'genus'}{$ranks{'species'}{$ranks{'subspecies'}{$staxids}[1]}[1]}[1]} += 1; $counts{'family'}++;
@@ -169,6 +173,7 @@ sub subspecies{
 }
 sub species{
 	no warnings; ## Removing unnecessary verbosity is species is not defined.
+	## Autoincrement species, then its parents (genus, family, order...) + autoincrementing them
 	$blasts{'species'}{$staxids} += 1; $counts{'species'}++;
 	$blasts{'genus'}{$ranks{'species'}{$staxids}[1]} += 1; $counts{'genus'}++;
 	$blasts{'family'}{$ranks{'genus'}{$ranks{'species'}{$staxids}[1]}[1]} += 1; $counts{'family'}++;
