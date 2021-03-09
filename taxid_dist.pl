@@ -26,7 +26,8 @@ COMMAND		${name} \\
 		  -b Examples/*.megablast \\
 		  -e 1e-75 \\
 		  -h 1 \\
-		  -o species genus family order class phylum
+		  -o species genus family order class phylum \\
+		  -v
 
 OPTIONS:
 -n (--nodes)	NCBI nodes.dmp file 
@@ -170,6 +171,7 @@ while (my $blast = shift@blast){
 ## Subroutines
 ## NOTE: the nodes.dmp sometimes includes taxid called 'no rank'
 ## Messes up the reconstruction based on parents. Must fix that...
+## Probably needs to restuct the subs accordingly
 sub subspecies{ 
 	no warnings; ## Removing unnecessary verbosity is species is not defined.
 	## Autoincrement subspecies, then its parents (species, genus, family...) + autoincrementing them
