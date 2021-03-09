@@ -101,7 +101,7 @@ while (my $line = <NODES>){
         $taxid{$txid}[1] = $rank;
         $taxid{$txid}[2] = $parent_txid;
 	}
-	else{ print "TaxID $txid not found in DB!\n"; } ## Debugging line
+	else{ print "TaxID $txid not found in DB!\n"; } ## Debugging line, if needed
 }
 if ($verbose){
 	print "\nPossible taxonomic ranks:\n";
@@ -154,7 +154,7 @@ while (my $blast = shift@blast){
 				print OUT "$label\t$key\t$blasts{$ext}{$key}\t$av\n";
 			}
 		}
-		else { print "No data found for taxonomic rank: $ext\n"; }
+		else { print "No data found for taxonomic rank: $ext\n"; } ## Debugging message, if any
 	}
 }
 
@@ -162,11 +162,11 @@ while (my $blast = shift@blast){
 sub species{
 	my $id = $staxids;
 	for (0..20){
-		my $rank = $taxid{$id}[1];
-		my $desc = $taxid{$id}[0];
-		$blasts{$rank}{$id} += 1;
-		$counts{$rank}++;
-		last if ($rank eq 'superkingdom');
-		$id = $taxid{$id}[2];
+		my $rank = $taxid{$id}[1]; ## Taxonomic rank could be strain, species, genus, family...
+		my $desc = $taxid{$id}[0]; ## Description of said rank
+		$blasts{$rank}{$id} += 1; ## Tracking number of instances
+		$counts{$rank}++;  ## Tracking number of instances
+		last if ($rank eq 'superkingdom'); ## Stop if rank is superkingdom
+		$id = $taxid{$id}[2]; ## Rank is now its parent.
 	}
 }
