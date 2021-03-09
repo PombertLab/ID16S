@@ -32,7 +32,7 @@ COMMAND		${name} \\
 OPTIONS:
 -n (--nodes)	NCBI nodes.dmp file 
 -a (--names)	NCBI names.dmp
--b (--blast)	NCBI blast output file(s) in oufmt 6 format
+-b (--blast)	NCBI blast output file(s) in outfmt 6 format
 -e (--evalue)	evalue cutoff [Default: 1e-75]
 -h (--hits)	Number of BLAST hits to keep; top N hits [Default: 1]
 -o (--output)	Output files by taxonomic ranks [Default: species genus family order class]
