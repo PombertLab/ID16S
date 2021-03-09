@@ -97,9 +97,8 @@ while (my $line = <NODES>){
 	if (exists $taxid{$txid}){
 		$ranks{$rank}{$txid}[0] = $taxid{$txid};
 		$ranks{$rank}{$txid}[1] = $parent_txid;
-		$ranks{$rank}{$txid}[2] = $rank;
-        $taxid{$txid}[1] = $rank;
-        $taxid{$txid}[2] = $parent_txid;
+		$taxid{$txid}[1] = $rank;
+		$taxid{$txid}[2] = $parent_txid;
 	}
 	else{ print "TaxID $txid not found in DB!\n"; } ## Debugging line, if needed
 }
