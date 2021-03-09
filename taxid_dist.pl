@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ## Pombert Lab, 2018
 my $name = 'taxid_dist.pl';
-my $version = '0.7';
+my $version = '0.7a';
 my $updated = '09/03/2021';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
@@ -37,7 +37,7 @@ OPTIONS:
 -h (--hits)	Number of BLAST hits to keep; top N hits [Default: 1]
 -o (--output)	Output files by taxonomic ranks [Default: species genus family order class]
 		# Possible taxonomic rank options are:
-		# subspecies strain species genus family order class phylum superkingdom
+		# subspecies strain species genus family order class phylum superkingdom 'no rank'
 -v (--verbose)	Adds verbosity
 OPTIONS
 die "\n$options\n" unless @ARGV;
@@ -86,6 +86,7 @@ while (my $line = <NODES>){
 	my $txid = $columns[0];
 	my $parent_txid = $columns[1];
 	my $rank = $columns[2];
+	$ranks{$rank} = '';
 
 	###  Rank types:
 	# biotype, clade, class, cohort, family, forma, forma specialis, genotype, genus, infraclass, infraorder
@@ -95,8 +96,6 @@ while (my $line = <NODES>){
 	# superorder, superphylum, tribe, varietas
 
 	if (exists $taxid{$txid}){
-		$ranks{$rank}{$txid}[0] = $taxid{$txid};
-		$ranks{$rank}{$txid}[1] = $parent_txid;
 		$taxid{$txid}[1] = $rank;
 		$taxid{$txid}[2] = $parent_txid;
 	}
