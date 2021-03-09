@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ## Pombert Lab, 2018
 my $name = 'taxid_dist.pl';
-my $version = '0.5a';
+my $version = '0.7';
 my $updated = '09/03/2021';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
@@ -35,9 +35,9 @@ OPTIONS:
 -b (--blast)	NCBI blast output file(s) in oufmt 6 format
 -e (--evalue)	evalue cutoff [Default: 1e-75]
 -h (--hits)	Number of BLAST hits to keep; top N hits [Default: 1]
--o (--output)	Output files by taxonomic ranks [Default: species genus family]
+-o (--output)	Output files by taxonomic ranks [Default: species genus family order class]
 		# Possible taxonomic rank options are:
-		# subspecies strain species genus family order class phylum
+		# subspecies strain species genus family order class phylum superkingdom
 -v (--verbose)	Adds verbosity
 OPTIONS
 die "\n$options\n" unless @ARGV;
@@ -47,7 +47,7 @@ my $namedmp;
 my @blast = ();
 my $evalue = 1e-75;
 my $maxhits = 1;
-my @outputs = ('species', 'genus', 'family');
+my @outputs = ('species', 'genus', 'family', 'order', 'class');
 my $verbose;
 GetOptions(
 	'n|nodes=s' => \$node,
@@ -70,7 +70,7 @@ while (my $line = <NAMES>){
 		my @columns = split("\t", $line);
 		my $txid = $columns[0];
 		my $description = $columns[1];
-		$taxid{$txid} = $description;
+		$taxid{$txid}[0] = $description;
 	}
 }
 
@@ -98,11 +98,13 @@ while (my $line = <NODES>){
 		$ranks{$rank}{$txid}[0] = $taxid{$txid};
 		$ranks{$rank}{$txid}[1] = $parent_txid;
 		$ranks{$rank}{$txid}[2] = $rank;
+        $taxid{$txid}[1] = $rank;
+        $taxid{$txid}[2] = $parent_txid;
 	}
 	else{ print "TaxID $txid not found in DB!\n"; } ## Debugging line
 }
 if ($verbose){
-	print "\nFound taxonomic ranks:\n";
+	print "\nPossible taxonomic ranks:\n";
 	for (sort keys %ranks){ print "$_\n"; }
 	print "\n";
 }
@@ -130,19 +132,11 @@ while (my $blast = shift@blast){
 			if ((exists $bhits{$query}) && ($bhits{$query} >= $maxhits)){next;}
 			elsif ((exists $bhits{$query}) && ($bhits{$query} < $maxhits)){
 				$bhits{$query}++;
-				if (exists $ranks{'norank'}{$staxids}){$blasts{'norank'}{$staxids} += 1; $counts{'norank'}++;}
-				elsif (exists $ranks{'subspecies'}{$staxids}){ subspecies(); }
-				elsif (exists $ranks{'species'}{$staxids}){ species(); }
-				elsif (exists $ranks{'strain'}{$staxids}){ strains(); }
-				else { print " txid$staxids taxonomic rank is unclear: $taxid{$staxids}\n"; }
+				if (exists $taxid{$staxids}){ species(); }
 			}
 			else{
 				$bhits{$query} = 1;
-				if (exists $ranks{'norank'}{$staxids}){$blasts{'norank'}{$staxids} += 1; $counts{'norank'}++;}
-				elsif (exists $ranks{'subspecies'}{$staxids}){ subspecies(); }
-				elsif (exists $ranks{'species'}{$staxids}){ species(); }
-				elsif (exists $ranks{'strain'}){ strains(); }
-				else { print " txid$staxids taxonomic rank is unclear: $taxid{$staxids}\n"; }
+				if (exists $taxid{$staxids}){ species(); }
 			}
 		}
 	}
@@ -155,11 +149,7 @@ while (my $blast = shift@blast){
 			open OUT, ">", "$blast.$ext" or die "Can't create file: $blast.$ext $!\n";
 			print OUT "$ext\tTaxID\tNumber\tPercent (total = $counts{$ext})\n";
 			foreach my $key (sort {$blasts{$ext}{$b} <=> $blasts{$ext}{$a}} keys %{$blasts{$ext}}){
-				
-				my $label; ## NOTE: the nodes.dmp sometimes includes taxid called 'no rank'
-				if (!defined $taxid{$key}){ $label = 'Undef rank'; }
-				else { $label = $taxid{$key}; }
-
+				my $label = $taxid{$key}[0];
 				my $av = sprintf("%.2f%%", ($blasts{$ext}{$key}/$counts{$ext})*100);
 				print OUT "$label\t$key\t$blasts{$ext}{$key}\t$av\n";
 			}
@@ -168,39 +158,15 @@ while (my $blast = shift@blast){
 	}
 }
 
-## Subroutines
-## NOTE: the nodes.dmp sometimes includes taxid called 'no rank'
-## Messes up the reconstruction based on parents. Must fix that...
-## Probably needs to restuct the subs accordingly
-sub subspecies{ 
-	no warnings; ## Removing unnecessary verbosity is species is not defined.
-	## Autoincrement subspecies, then its parents (species, genus, family...) + autoincrementing them
-	$blasts{'subspecies'}{$staxids} += 1; $counts{'subspecies'}++;
-	$blasts{'species'}{$ranks{'subspecies'}{$staxids}[1]} += 1; $counts{'species'}++;
-	$blasts{'bgenus'}{$ranks{'species'}{$ranks{'subspecies'}{$staxids}[1]}[1]} += 1; $counts{'genus'}++;
-	$blasts{'family'}{$ranks{'genus'}{$ranks{'species'}{$ranks{'subspecies'}{$staxids}[1]}[1]}[1]} += 1; $counts{'family'}++;
-	$blasts{'order'}{$ranks{'family'}{$ranks{'genus'}{$ranks{'species'}{$ranks{'subspecies'}{$staxids}[1]}[1]}[1]}[1]} += 1; $counts{'order'}++;
-	$blasts{'class'}{$ranks{'order'}{$ranks{'family'}{$ranks{'genus'}{$ranks{'species'}{$ranks{'subspecies'}{$staxids}[1]}[1]}[1]}[1]}[1]} += 1; $counts{'class'}++;
-	$blasts{'phylum'}{$ranks{'class'}{$ranks{'order'}{$ranks{'family'}{$ranks{'genus'}{$ranks{'species'}{$ranks{'subspecies'}{$staxids}[1]}[1]}[1]}[1]}[1]}[1]} += 1; $counts{'phylum'}++;
-}
-sub strains{ 
-	no warnings; ## Removing unnecessary verbosity is species is not defined.
-	## Autoincrement strain, then its parents (species, genus, family...) + autoincrementing them
-	$blasts{'strain'}{$staxids} += 1; $counts{'strain'}++;
-	$blasts{'species'}{$ranks{'subspecies'}{$staxids}[1]} += 1; $counts{'species'}++;
-	$blasts{'bgenus'}{$ranks{'species'}{$ranks{'subspecies'}{$staxids}[1]}[1]} += 1; $counts{'genus'}++;
-	$blasts{'family'}{$ranks{'genus'}{$ranks{'species'}{$ranks{'subspecies'}{$staxids}[1]}[1]}[1]} += 1; $counts{'family'}++;
-	$blasts{'order'}{$ranks{'family'}{$ranks{'genus'}{$ranks{'species'}{$ranks{'subspecies'}{$staxids}[1]}[1]}[1]}[1]} += 1; $counts{'order'}++;
-	$blasts{'class'}{$ranks{'order'}{$ranks{'family'}{$ranks{'genus'}{$ranks{'species'}{$ranks{'subspecies'}{$staxids}[1]}[1]}[1]}[1]}[1]} += 1; $counts{'class'}++;
-	$blasts{'phylum'}{$ranks{'class'}{$ranks{'order'}{$ranks{'family'}{$ranks{'genus'}{$ranks{'species'}{$ranks{'subspecies'}{$staxids}[1]}[1]}[1]}[1]}[1]}[1]} += 1; $counts{'phylum'}++;
-}
+## Subroutine
 sub species{
-	no warnings; ## Removing unnecessary verbosity is species is not defined.
-	## Autoincrement species, then its parents (genus, family, order...) + autoincrementing them
-	$blasts{'species'}{$staxids} += 1; $counts{'species'}++;
-	$blasts{'genus'}{$ranks{'species'}{$staxids}[1]} += 1; $counts{'genus'}++;
-	$blasts{'family'}{$ranks{'genus'}{$ranks{'species'}{$staxids}[1]}[1]} += 1; $counts{'family'}++;
-	$blasts{'order'}{$ranks{'family'}{$ranks{'genus'}{$ranks{'species'}{$staxids}[1]}[1]}[1]} += 1; $counts{'order'}++;
-	$blasts{'class'}{$ranks{'order'}{$ranks{'family'}{$ranks{'genus'}{$ranks{'species'}{$staxids}[1]}[1]}[1]}[1]} += 1; $counts{'class'}++;
-	$blasts{'phylum'}{$ranks{'class'}{$ranks{'order'}{$ranks{'family'}{$ranks{'genus'}{$ranks{'species'}{$staxids}[1]}[1]}[1]}[1]}[1]} += 1; $counts{'phylum'}++;
+	my $id = $staxids;
+	for (0..20){
+		my $rank = $taxid{$id}[1];
+		my $desc = $taxid{$id}[0];
+		$blasts{$rank}{$id} += 1;
+		$counts{$rank}++;
+		last if ($rank eq 'superkingdom');
+		$id = $taxid{$id}[2];
+	}
 }
