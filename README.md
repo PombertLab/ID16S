@@ -45,13 +45,18 @@ cd ../
 
 ## Key steps
 The ID16S pipeline consists of a few simple steps:
-0. Optional - Basecalling with guppy
-1. FASTQ to FASTA conversion
-2. Megablastn analyses against the Microbial 16S database (16S_ribosomal_RNA.tar.gz in NCBI v5)
-3. Summarizing the results with taxid_dist.pl
+1. Optional - Basecall Nanopore FAST5 file with guppy
+2. Convert FASTQ files to FASTA with [fastq2fasta.pl](https://github.com/PombertLab/ID16S/blob/master/fastq2fasta.pl)
+3. Perform homology searches against the Microbial 16S database with [megablast.pl](https://github.com/PombertLab/ID16S/blob/master/megablast.pl)
+4. Summarize the taxonomic composition of the dataset(s) with [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxid_dist.pl)
 
 ## Example
-#### a) megablast
+XXX
+
+```
+cd 
+```
+
 ```Bash
 fastq2fasta.pl -f Examples/*.fastq
 
@@ -67,26 +72,6 @@ taxid_dist.pl \
    -n TaxDumps/nodes.dmp \
    -a TaxDumps/names.dmp \
    -b Examples/*.megablast \
-   -e 1e-75 \
-   -h 1
-```
-
-#### b) blastn
-```Bash
-fastq2fasta.pl Examples/*.fastq
-
-megablast.pl \
-   -k blastn \
-   -q Examples/*.fasta \
-   -d NCBI_16S/16SMicrobial \
-   -e 1e-05 \
-   -c 10 \
-   -t 10
-
-taxid_dist.pl \
-   -n TaxDumps/nodes.dmp \
-   -a TaxDumps/names.dmp \
-   -b Examples/*.blastn \
    -e 1e-75 \
    -h 1
 ```
