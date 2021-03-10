@@ -14,9 +14,6 @@ Note that for large datasets, BLAST homology searches will take a while to compl
 ## Dependencies
 - [Perl 5](https://www.perl.org/)
 - [BLAST+](https://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastDocs&DOC_TYPE=Download)
-- [NCBI 16S Microbial database](https://ftp.ncbi.nlm.nih.gov/blast/db/) - 16S_ribosomal_RNA.tar.gz
-- NCBI Taxonomy database - ftp://ftp.ncbi.nih.gov/blast/db/taxdb.tar.gz
-- NCBI Taxonomy dumps - ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz
 
 #### Optional
 - [guppy](https://nanoporetech.com/) (for FAST5 basecalling)
@@ -29,10 +26,16 @@ cd ID16S/
 export PATH=$PATH:$(pwd)
 ```
 
-To download the required NCBI databases:
+A total of 3 NCBI datasets are required for the ID16S pipeline:
+The NCBI 16S Microbial database - [16S_ribosomal_RNA.tar.gz](https://ftp.ncbi.nlm.nih.gov/blast/db/16S_ribosomal_RNA.tar.gz)
+The NCBI Taxonomy database - [taxdb.tar.gz](https://ftp.ncbi.nlm.nih.gov/blast/db/taxdb.tar.gz)
+The NCBI Taxonomy dumps - [taxdump.tar.gz](https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz)
+
+These datasets can be downloaded manually or with [download_DBs.sh](https://github.com/PombertLab/ID16S/blob/master/download_DBs.sh). The later will download the NCBI Microbial/Taxonomy databases and dump files in the current directory. To use it, simply type:
 ```Bash
-download_DBs.sh ## Downloads the NCBI Microbial/Taxonomy databases and dump files in current directory
+download_DBs.sh
 ```
+
 
 The NCBI Taxonomy database variable must be set in the environmental variables:
 ```Bash
