@@ -37,7 +37,7 @@ download_DBs.sh
 ```
 
 
-The NCBI Taxonomy database variable must be set in the environmental variables:
+The NCBI Taxonomy database must be set in the BLASTDB environment variables. To add it to for the current session, type:
 ```Bash
 cd TaxDB/
 export BLASTDB=$BLASTDB:$(pwd)
