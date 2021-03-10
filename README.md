@@ -56,7 +56,7 @@ We can use the FASTQ files located in the Example/ folder to test the installati
 fastq2fasta.pl -f Example/*.fastq
 ```
 
-To perform BLAST homology searches against the NCBI 16S ribosomal RNA database, we can use [megablast.pl](https://github.com/PombertLab/ID16S/blob/master/megablast.pl). This script will generate BLAST outputs with the following format: *-outfmt '6 qseqid sseqid pident length bitscore evalue staxids sskingdoms sscinames sblastnames'*. This format is required for [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxid_dist.pl).
+To perform BLAST homology searches against the NCBI 16S ribosomal RNA database, we can use [megablast.pl](https://github.com/PombertLab/ID16S/blob/master/megablast.pl). This script will generate BLAST outputs with the following format: ***-outfmt '6 qseqid sseqid pident length bitscore evalue staxids sskingdoms sscinames sblastnames'***. This format is required for [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxid_dist.pl).
 
 To perform BLAST searches with [megablast.pl](https://github.com/PombertLab/ID16S/blob/master/megablast.pl) using 10 threads (-t 10), type:
 ``` Bash
