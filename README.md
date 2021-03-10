@@ -86,7 +86,7 @@ To use [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxid_dis
 taxid_dist.pl \
    -n TaxDumps/nodes.dmp \
    -a TaxDumps/names.dmp \
-   -b Examples/*.megablast \
+   -b Example/*.megablast \
    -e 1e-75 \
    -h 1
    -r species genus family order class phylum \
