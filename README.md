@@ -109,10 +109,70 @@ Options for [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxi
 ```
 
 The output of [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxid_dist.pl) should look like:
-```
+```Bash
 head -n 5 SUMMARY/*
 
+==> SUMMARY/sample_1.fasta.megablast.class <==
+class	TaxID	Number	Percent (total = 848)
+Mollicutes	31969	848	100.00%
 
+==> SUMMARY/sample_1.fasta.megablast.family <==
+family	TaxID	Number	Percent (total = 848)
+Mycoplasmataceae	2092	848	100.00%
+
+==> SUMMARY/sample_1.fasta.megablast.genus <==
+genus	TaxID	Number	Percent (total = 848)
+Mycoplasmopsis	2767358	837	98.70%
+Mycoplasma	2093	11	1.30%
+
+==> SUMMARY/sample_1.fasta.megablast.order <==
+order	TaxID	Number	Percent (total = 848)
+Mycoplasmatales	2085	848	100.00%
+
+==> SUMMARY/sample_1.fasta.megablast.phylum <==
+phylum	TaxID	Number	Percent (total = 848)
+Tenericutes	544448	848	100.00%
+
+==> SUMMARY/sample_1.fasta.megablast.species <==
+species	TaxID	Number	Percent (total = 848)
+Mycoplasma fermentans	2115	677	79.83%
+Mycoplasma arginini	2094	134	15.80%
+Mycoplasma caviae	55603	22	2.59%
+Mycoplasma canadense	29554	5	0.59%
+
+==> SUMMARY/sample_2.fasta.megablast.class <==
+class	TaxID	Number	Percent (total = 809)
+Bacilli	91061	809	100.00%
+
+==> SUMMARY/sample_2.fasta.megablast.family <==
+family	TaxID	Number	Percent (total = 809)
+Staphylococcaceae	90964	799	98.76%
+Bacillaceae	186817	7	0.87%
+Listeriaceae	186820	1	0.12%
+Enterococcaceae	81852	1	0.12%
+
+==> SUMMARY/sample_2.fasta.megablast.genus <==
+genus	TaxID	Number	Percent (total = 809)
+Staphylococcus	1279	796	98.39%
+Bacillus	1386	3	0.37%
+Oceanobacillus	182709	1	0.12%
+Halobacillus	45667	1	0.12%
+
+==> SUMMARY/sample_2.fasta.megablast.order <==
+order	TaxID	Number	Percent (total = 809)
+Bacillales	1385	807	99.75%
+Lactobacillales	186826	2	0.25%
+
+==> SUMMARY/sample_2.fasta.megablast.phylum <==
+phylum	TaxID	Number	Percent (total = 809)
+Firmicutes	1239	809	100.00%
+
+==> SUMMARY/sample_2.fasta.megablast.species <==
+species	TaxID	Number	Percent (total = 809)
+Staphylococcus kloosii	29384	696	86.03%
+Staphylococcus casei	201828	24	2.97%
+Staphylococcus hominis	1290	20	2.47%
+Staphylococcus succinus	61015	15	1.85%
 ```
 
 ## References
