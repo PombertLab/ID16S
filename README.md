@@ -27,9 +27,9 @@ export PATH=$PATH:$(pwd)
 ```
 
 A total of 3 NCBI datasets are required for the ID16S pipeline:
-The NCBI 16S Microbial database - [16S_ribosomal_RNA.tar.gz](https://ftp.ncbi.nlm.nih.gov/blast/db/16S_ribosomal_RNA.tar.gz)
-The NCBI Taxonomy database - [taxdb.tar.gz](https://ftp.ncbi.nlm.nih.gov/blast/db/taxdb.tar.gz)
-The NCBI Taxonomy dumps - [taxdump.tar.gz](https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz)
+1. The NCBI 16S Microbial database - [16S_ribosomal_RNA.tar.gz](https://ftp.ncbi.nlm.nih.gov/blast/db/16S_ribosomal_RNA.tar.gz)
+2. The NCBI Taxonomy database - [taxdb.tar.gz](https://ftp.ncbi.nlm.nih.gov/blast/db/taxdb.tar.gz)
+3. The NCBI Taxonomy dumps - [taxdump.tar.gz](https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz)
 
 These datasets can be downloaded manually or with [download_DBs.sh](https://github.com/PombertLab/ID16S/blob/master/download_DBs.sh). The later will download the NCBI Microbial/Taxonomy databases and dump files in the current directory. To use it, simply type:
 ```Bash
