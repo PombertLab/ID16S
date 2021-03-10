@@ -45,21 +45,21 @@ cd ../
 
 ## Key steps
 The ID16S pipeline consists of a few simple steps:
-1. Optional - Basecall Nanopore FAST5 file with guppy
+1. Optional - Basecall Nanopore FAST5 file with [guppy](https://nanoporetech.com/)
 2. Convert FASTQ files to FASTA with [fastq2fasta.pl](https://github.com/PombertLab/ID16S/blob/master/fastq2fasta.pl)
 3. Perform homology searches against the Microbial 16S database with [megablast.pl](https://github.com/PombertLab/ID16S/blob/master/megablast.pl)
 4. Summarize the taxonomic composition of the dataset(s) with [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxid_dist.pl)
 
 ## Example
-XXX
-
-```
-cd 
-```
-
+We can use the FASTQ files located in the Example/ folder to test the installation of the pipeline. To convert the FASTQ files to FASTA format, simply type:
 ```Bash
-fastq2fasta.pl -f Examples/*.fastq
+fastq2fasta.pl -f Example/*.fastq
+```
 
+To perform BLAST homology searches against the NCBI 16S ribosomal RNA database, we can use [megablast.pl](https://github.com/PombertLab/ID16S/blob/master/megablast.pl). This script will generate BLAST outputs with the following format: -outfmt '6 qseqid sseqid pident length bitscore evalue staxids sskingdoms sscinames sblastnames'. This format is required for [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxid_dist.pl).
+
+To perform BLAST searches with [megablast.pl](https://github.com/PombertLab/ID16S/blob/master/megablast.pl) using 10 threads (-t 10), type:
+``` Bash
 megablast.pl \
    -k megablast \
    -q Examples/*.fasta \
@@ -67,13 +67,52 @@ megablast.pl \
    -e 1e-05 \
    -c 10 \
    -t 10
+```
 
+Options for [megablast.pl](https://github.com/PombertLab/ID16S/blob/master/megablast.pl) are:
+```
+-k (--task)	megablast, dc-megablast, blastn [default = megablast]
+-d (--db)	NCBI 16S Microbial Database to query [default = 16S_ribosomal_RNA]
+-t (--threads)	CPUs to use [default = 10]
+-e (--evalue)	1e-05, 1e-10 or other [default = 1e-05]
+-c (--culling)	culling limit [default = 10]
+-q (--query)	fasta file(s) to be queried
+```
+
+To reconstruct the composition of the datasets from the BLAST homology searches, we can use [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxid_dist.pl). This script will generate output files per requested taxonomic rank, up to the superkingdom.
+
+To use [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxid_dist.pl), type:
+```Bash
 taxid_dist.pl \
    -n TaxDumps/nodes.dmp \
    -a TaxDumps/names.dmp \
    -b Examples/*.megablast \
    -e 1e-75 \
    -h 1
+   -r species genus family order class phylum \
+   -o SUMMARY \
+   -v
+```
+
+Options for [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxid_dist.pl) are:
+```
+-n (--nodes)	NCBI nodes.dmp file 
+-a (--names)	NCBI names.dmp
+-b (--blast)	NCBI blast output file(s) in outfmt 6 format
+-e (--evalue)	evalue cutoff [Default: 1e-75]
+-h (--hits)	Number of BLAST hits to keep; top N hits [Default: 1]
+-v (--verbose)	Adds verbosity
+-o (--outdir)	Output directory [Default: ./]
+-r (--ranks)	Output files by taxonomic ranks [Default: species genus family order class]
+		# Possible taxonomic rank options are:
+		# subspecies strain species genus family order class phylum superkingdom 'no rank'
+```
+
+The output of [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxid_dist.pl) should look like:
+```
+head -n 5 SUMMARY/*
+
+
 ```
 
 ## References
