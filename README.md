@@ -88,7 +88,7 @@ taxid_dist.pl \
    -a TaxDumps/names.dmp \
    -b Example/*.megablast \
    -e 1e-75 \
-   -h 1
+   -h 1 \
    -r species genus family order class phylum \
    -o SUMMARY \
    -v
