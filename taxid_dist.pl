@@ -1,10 +1,10 @@
 #!/usr/bin/perl
 ## Pombert Lab, 2018
 my $name = 'taxid_dist.pl';
-my $version = '0.7a';
-my $updated = '09/03/2021';
+my $version = '0.8';
+my $updated = '10/03/2021';
 
-use strict; use warnings; use Getopt::Long qw(GetOptions);
+use strict; use warnings; use Getopt::Long qw(GetOptions); use File::Basename;
 
 ### Defining options
 my $options = <<"OPTIONS";
@@ -26,7 +26,8 @@ COMMAND		${name} \\
 		  -b Examples/*.megablast \\
 		  -e 1e-75 \\
 		  -h 1 \\
-		  -o species genus family order class phylum \\
+		  -r species genus family order class phylum \\
+		  -o output_dir \\
 		  -v
 
 OPTIONS:
@@ -35,10 +36,11 @@ OPTIONS:
 -b (--blast)	NCBI blast output file(s) in outfmt 6 format
 -e (--evalue)	evalue cutoff [Default: 1e-75]
 -h (--hits)	Number of BLAST hits to keep; top N hits [Default: 1]
--o (--output)	Output files by taxonomic ranks [Default: species genus family order class]
+-v (--verbose)	Adds verbosity
+-o (--outdir)	Output directory [Default: ./]
+-r (--ranks)	Output files by taxonomic ranks [Default: species genus family order class]
 		# Possible taxonomic rank options are:
 		# subspecies strain species genus family order class phylum superkingdom 'no rank'
--v (--verbose)	Adds verbosity
 OPTIONS
 die "\n$options\n" unless @ARGV;
 
@@ -47,7 +49,8 @@ my $namedmp;
 my @blast = ();
 my $evalue = 1e-75;
 my $maxhits = 1;
-my @outputs = ('species', 'genus', 'family', 'order', 'class');
+my $outdir = './';
+my @ranks = ('species', 'genus', 'family', 'order', 'class');
 my $verbose;
 GetOptions(
 	'n|nodes=s' => \$node,
@@ -55,7 +58,8 @@ GetOptions(
 	'b|blast=s@{1,}' => \@blast,
 	'e|value=s' => \$evalue,
 	'h|hits=i' => \$maxhits,
-	'o|outputs=s@{1,}' => \@outputs,
+	'o|outdir=s' => \$outdir,
+	'r|ranks=s@{1,}' => \@ranks,
 	'v|verbose' => \$verbose
 );
 
@@ -107,12 +111,19 @@ if ($verbose){
 	print "\n";
 }
 
+## Creating output dir
+if ($verbose){ print "Output directory = $outdir\n\n"; }
+unless (-e $outdir){ 
+	mkdir ($outdir,0755) or die "Can't create output directory: $outdir $!\n";
+}
+
 ## Working on BLAST taxonomized outfmt6 files; treating each file as independent datasets
 ## -outfmt '6 qseqid sseqid pident length bitscore evalue staxids sskingdoms sscinames sblastnames'
 my %bhits; my %blasts; my %counts; my $staxids;
 while (my $blast = shift@blast){
 
 	open BLAST, "<", "$blast" or die "Can't read file: $blast $!\n";
+	my $basename = fileparse($blast);
 	if ($verbose){ print "Parsing $blast...\n"; }
 
 	%bhits = (); %blasts = (); %counts = ();
@@ -127,7 +138,7 @@ while (my $blast = shift@blast){
 		if ($staxids =~ /^(\d+);/){$staxids = $1;} ## Searching for multiple taxids, keeping only the 1st one
 
 		if ($ev <= $evalue){
-			if ((exists $bhits{$query}) && ($bhits{$query} >= $maxhits)){next;}
+			if ((exists $bhits{$query}) && ($bhits{$query} >= $maxhits)){ next; }
 			elsif ((exists $bhits{$query}) && ($bhits{$query} < $maxhits)){
 				$bhits{$query}++;
 				if (exists $taxid{$staxids}){ species(); }
@@ -141,18 +152,18 @@ while (my $blast = shift@blast){
 
 	## Working on output files
 	my $size;
-	my @ext = @outputs;
-	for my $ext (@ext){
-		if ($counts{$ext}){
-			open OUT, ">", "$blast.$ext" or die "Can't create file: $blast.$ext $!\n";
-			print OUT "$ext\tTaxID\tNumber\tPercent (total = $counts{$ext})\n";
-			foreach my $key (sort {$blasts{$ext}{$b} <=> $blasts{$ext}{$a}} keys %{$blasts{$ext}}){
+	for my $rnk (@ranks){
+		if ($counts{$rnk}){
+			my $ext = $rnk;	$ext =~ s/ /_/g;
+			open OUT, ">", "${outdir}/$basename.$ext" or die "Can't create file: $basename.$ext $!\n";
+			print OUT "$rnk\tTaxID\tNumber\tPercent (total = $counts{$rnk})\n";
+			foreach my $key (sort {$blasts{$rnk}{$b} <=> $blasts{$rnk}{$a}} keys %{$blasts{$rnk}}){
 				my $label = $taxid{$key}[0];
-				my $av = sprintf("%.2f%%", ($blasts{$ext}{$key}/$counts{$ext})*100);
-				print OUT "$label\t$key\t$blasts{$ext}{$key}\t$av\n";
+				my $av = sprintf("%.2f%%", ($blasts{$rnk}{$key}/$counts{$rnk})*100);
+				print OUT "$label\t$key\t$blasts{$rnk}{$key}\t$av\n";
 			}
 		}
-		else { print "No data found for taxonomic rank: $ext\n"; } ## Debugging message, if any
+		else { print "No data found for taxonomic rank: $rnk\n"; } ## Debugging message, if any
 	}
 }
 
