@@ -45,10 +45,10 @@ cd ../
 
 ## Key steps
 The ID16S pipeline consists of a few simple steps:
-1. Optional - Basecall Nanopore FAST5 file with [guppy](https://nanoporetech.com/)
-2. Convert FASTQ files to FASTA with [fastq2fasta.pl](https://github.com/PombertLab/ID16S/blob/master/fastq2fasta.pl)
+1. Optional - Basecall Nanopore FAST5 files with [guppy](https://nanoporetech.com/)
+2. Convert FASTQ files to FASTA format with [fastq2fasta.pl](https://github.com/PombertLab/ID16S/blob/master/fastq2fasta.pl)
 3. Perform homology searches against the Microbial 16S database with [megablast.pl](https://github.com/PombertLab/ID16S/blob/master/megablast.pl)
-4. Summarize the taxonomic composition of the dataset(s) with [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxid_dist.pl)
+4. Summarize the taxonomic composition of the datasets with [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxid_dist.pl)
 
 ## Example
 We can use the FASTQ files located in the Example/ folder to test the installation of the pipeline. To convert the FASTQ files to FASTA format, simply type:
@@ -62,7 +62,7 @@ To perform BLAST searches with [megablast.pl](https://github.com/PombertLab/ID16
 ``` Bash
 megablast.pl \
    -k megablast \
-   -q Examples/*.fasta \
+   -q Example/*.fasta \
    -d NCBI_16S/16S_ribosomal_RNA \
    -e 1e-05 \
    -c 10 \
