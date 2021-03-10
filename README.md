@@ -79,7 +79,7 @@ Options for [megablast.pl](https://github.com/PombertLab/ID16S/blob/master/megab
 -q (--query)	fasta file(s) to be queried
 ```
 
-To reconstruct the composition of the datasets from the BLAST homology searches, we can use [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxid_dist.pl). This script will generate output files per requested taxonomic rank, up to the superkingdom.
+To reconstruct the composition of the datasets from the BLAST homology searches, we can use [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxid_dist.pl). This script will generate output files per requested taxonomic rank, up to the superkingdom rank.
 
 To use [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxid_dist.pl), type:
 ```Bash
