@@ -2,7 +2,7 @@
 * [Introduction](#Introduction)
 * [Dependencies](#Dependencies)
 * [Installation](#Installation)
-* [Steps](#Steps)
+* [Key steps](#Key-steps)
 * [Example](#Example)
 * [References](#References)
 
@@ -36,7 +36,6 @@ These datasets can be downloaded manually or with [download_DBs.sh](https://gith
 download_DBs.sh
 ```
 
-
 The NCBI Taxonomy database must be set in the BLASTDB environment variables. To set it for the current session, type:
 ```Bash
 cd TaxDB/
@@ -44,11 +43,12 @@ export BLASTDB=$BLASTDB:$(pwd)
 cd ../
 ```
 
-## Steps
-1) Basecalling with guppy (optional)
-2) FASTQ to FASTA conversion
-3) Megablastn analyses against the Microbial 16S database (16S_ribosomal_RNA.tar.gz in NCBI v5)
-4) Summarizing the results with taxid_dist.pl
+## Key steps
+The ID16S pipeline consists of a few simple steps:
+0. Optional - Basecalling with guppy
+1. FASTQ to FASTA conversion
+2. Megablastn analyses against the Microbial 16S database (16S_ribosomal_RNA.tar.gz in NCBI v5)
+3. Summarizing the results with taxid_dist.pl
 
 ## Example
 #### a) megablast
