@@ -23,7 +23,7 @@ REQUIREMENTS	- ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz
 COMMAND		${name} \\
 		  -n TaxDumps/nodes.dmp \\
 		  -a TaxDumps/names.dmp \\
-		  -b *.megablast \\
+		  -b MEGABLAST/*.megablast \\
 		  -e 1e-75 \\
 		  -h 1 \\
 		  -o output_dir \\
