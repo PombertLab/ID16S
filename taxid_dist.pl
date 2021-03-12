@@ -113,7 +113,7 @@ if ($verbose){
 
 ## Creating output dir
 if ($verbose){ print "Output directory = $outdir\n\n"; }
-unless (-e $outdir){ 
+unless (-d $outdir){ 
 	mkdir ($outdir,0755) or die "Can't create output directory $outdir: $!\n";
 }
 
