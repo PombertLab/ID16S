@@ -98,8 +98,8 @@ taxid_dist.pl \
    -b MEGABLAST/*.megablast \
    -e 1e-75 \
    -h 1 \
-   -r species genus family order class phylum \
    -o SUMMARY \
+   -r species genus family order class phylum \
    -v
 ```
 
@@ -110,11 +110,11 @@ Options for [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxi
 -b (--blast)	NCBI blast output file(s) in outfmt 6 format
 -e (--evalue)	evalue cutoff [Default: 1e-75]
 -h (--hits)	Number of BLAST hits to keep; top N hits [Default: 1]
--v (--verbose)	Adds verbosity
 -o (--outdir)	Output directory [Default: ./]
 -r (--ranks)	Output files by taxonomic ranks [Default: species genus family order class]
 		# Possible taxonomic rank options are:
 		# subspecies strain species genus family order class phylum superkingdom 'no rank'
+-v (--verbose)	Adds verbosity
 ```
 
 The output of [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxid_dist.pl) should look like:

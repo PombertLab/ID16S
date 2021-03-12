@@ -26,8 +26,8 @@ COMMAND		${name} \\
 		  -b Examples/*.megablast \\
 		  -e 1e-75 \\
 		  -h 1 \\
-		  -r species genus family order class phylum \\
 		  -o output_dir \\
+		  -r species genus family order class phylum \\
 		  -v
 
 OPTIONS:
@@ -36,11 +36,11 @@ OPTIONS:
 -b (--blast)	NCBI blast output file(s) in outfmt 6 format
 -e (--evalue)	evalue cutoff [Default: 1e-75]
 -h (--hits)	Number of BLAST hits to keep; top N hits [Default: 1]
--v (--verbose)	Adds verbosity
 -o (--outdir)	Output directory [Default: ./]
 -r (--ranks)	Output files by taxonomic ranks [Default: species genus family order class]
 		# Possible taxonomic rank options are:
 		# subspecies strain species genus family order class phylum superkingdom 'no rank'
+-v (--verbose)	Adds verbosity
 OPTIONS
 die "\n$options\n" unless @ARGV;
 
