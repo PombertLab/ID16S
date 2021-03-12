@@ -51,9 +51,16 @@ The ID16S pipeline consists of a few simple steps:
 4. Summarize the taxonomic composition of the datasets with [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxid_dist.pl)
 
 ## Example
-We can use the FASTQ files located in the Example/ folder to test the installation of the pipeline. To convert the FASTQ files to FASTA format, simply type:
+We can use the FASTQ files located in the Example/ folder to test the installation of the pipeline. To convert the FASTQ files to FASTA format with [fastq2fasta.pl](https://github.com/PombertLab/ID16S/blob/master/fastq2fasta.pl), simply type:
 ```Bash
-fastq2fasta.pl -f Example/*.fastq
+fastq2fasta.pl -f Example/*.fastq -o FASTA -v
+```
+
+Options for [fastq2fasta.pl](https://github.com/PombertLab/ID16S/blob/master/fastq2fasta.pl) are:
+```
+-f (--fastq)	FASTQ files to convert
+-o (--outdir)	Output directory [Default: ./]
+-v (--verbose)	Adds verbosity
 ```
 
 To perform BLAST homology searches against the NCBI 16S ribosomal RNA database, we can use [megablast.pl](https://github.com/PombertLab/ID16S/blob/master/megablast.pl). This script will generate BLAST outputs with the following format: ***-outfmt '6 qseqid sseqid pident length bitscore evalue staxids sskingdoms sscinames sblastnames'***. This format is required for [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxid_dist.pl).
@@ -62,7 +69,7 @@ To perform BLAST searches with [megablast.pl](https://github.com/PombertLab/ID16
 ``` Bash
 megablast.pl \
    -k megablast \
-   -q Example/*.fasta \
+   -q FASTA/*.fasta \
    -d NCBI_16S/16S_ribosomal_RNA \
    -e 1e-05 \
    -c 10 \
