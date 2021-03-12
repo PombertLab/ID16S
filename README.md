@@ -38,9 +38,7 @@ download_DBs.sh
 
 The NCBI Taxonomy database must be set in the BLASTDB environment variables. To set it for the current session, type:
 ```Bash
-cd TaxDB/
-export BLASTDB=$BLASTDB:$(pwd)
-cd ../
+export BLASTDB=$BLASTDB:$(pwd)/TaxDB
 ```
 
 ## Key steps
@@ -93,7 +91,7 @@ To use [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxid_dis
 taxid_dist.pl \
    -n TaxDumps/nodes.dmp \
    -a TaxDumps/names.dmp \
-   -b Example/*.megablast \
+   -b FASTA/*.megablast \
    -e 1e-75 \
    -h 1 \
    -r species genus family order class phylum \
