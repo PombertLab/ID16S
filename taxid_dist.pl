@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ## Pombert Lab, 2018
 my $name = 'taxid_dist.pl';
-my $version = '0.8';
+my $version = '0.8a';
 my $updated = '10/03/2021';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions); use File::Basename;
@@ -65,7 +65,7 @@ GetOptions(
 
 ## Initializing taxids -> names database
 my %taxid;
-open NAMES, "<", "$namedmp" or die "Can't read file $namedmp $!\n";
+open NAMES, "<", "$namedmp" or die "Can't read file $namedmp: $!\n";
 if ($verbose){ print "\nInitializing taxonomic IDs...\n"; }
 
 while (my $line = <NAMES>){
@@ -80,7 +80,7 @@ while (my $line = <NAMES>){
 
 ### Initializing taxonomic databases
 my %ranks;
-open NODES, "<", "$node" or die "Can't read file $node $!\n";
+open NODES, "<", "$node" or die "Can't read file $node: $!\n";
 if ($verbose){ print "Initializing taxonomic databases...\n"; }
 
 while (my $line = <NODES>){
@@ -114,7 +114,7 @@ if ($verbose){
 ## Creating output dir
 if ($verbose){ print "Output directory = $outdir\n\n"; }
 unless (-e $outdir){ 
-	mkdir ($outdir,0755) or die "Can't create output directory: $outdir $!\n";
+	mkdir ($outdir,0755) or die "Can't create output directory $outdir: $!\n";
 }
 
 ## Working on BLAST taxonomized outfmt6 files; treating each file as independent datasets
@@ -122,7 +122,7 @@ unless (-e $outdir){
 my %bhits; my %blasts; my %counts; my $staxids;
 while (my $blast = shift@blast){
 
-	open BLAST, "<", "$blast" or die "Can't read file: $blast $!\n";
+	open BLAST, "<", "$blast" or die "Can't read file $blast: $!\n";
 	my $basename = fileparse($blast);
 	if ($verbose){ print "Parsing $blast...\n"; }
 
@@ -141,11 +141,11 @@ while (my $blast = shift@blast){
 			if ((exists $bhits{$query}) && ($bhits{$query} >= $maxhits)){ next; }
 			elsif ((exists $bhits{$query}) && ($bhits{$query} < $maxhits)){
 				$bhits{$query}++;
-				if (exists $taxid{$staxids}){ species(); }
+				if (exists $taxid{$staxids}){ lineage(); }
 			}
 			else{
 				$bhits{$query} = 1;
-				if (exists $taxid{$staxids}){ species(); }
+				if (exists $taxid{$staxids}){ lineage(); }
 			}
 		}
 	}
@@ -155,7 +155,7 @@ while (my $blast = shift@blast){
 	for my $rnk (@ranks){
 		if ($counts{$rnk}){
 			my $ext = $rnk;	$ext =~ s/ /_/g;
-			open OUT, ">", "${outdir}/$basename.$ext" or die "Can't create file: $basename.$ext $!\n";
+			open OUT, ">", "${outdir}/$basename.$ext" or die "Can't create file $basename.$ext: $!\n";
 			print OUT "$rnk\tTaxID\tNumber\tPercent (total = $counts{$rnk})\n";
 			foreach my $key (sort {$blasts{$rnk}{$b} <=> $blasts{$rnk}{$a}} keys %{$blasts{$rnk}}){
 				my $label = $taxid{$key}[0];
@@ -168,7 +168,7 @@ while (my $blast = shift@blast){
 }
 
 ## Subroutine
-sub species{
+sub lineage{
 	my $id = $staxids;
 	for (0..20){
 		my $rank = $taxid{$id}[1]; ## Taxonomic rank could be strain, species, genus, family...
