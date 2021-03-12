@@ -84,7 +84,7 @@ while (my $query = shift@query){
 	
 	## Checking for queries without hits in BLAST homology searches
 	if ($verbose){ print "Checking for sequences in $query with no hits using $task against $db...\n"; }
-	open BLAST, "<", "$query.$task" or die "Can't read file $query.$task: $!\n";
+	open BLAST, "<", "${outdir}/$query.$task" or die "Can't read file $query.$task: $!\n";
 	my %db;
 	while (my $line = <BLAST>){
 		my @array = split("\t", $line);
