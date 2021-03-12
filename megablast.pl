@@ -1,10 +1,10 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT 2018
 my $name = 'megablast.pl';
-my $version = '0.2a';
-my $updated = '06/03/2021';
+my $version = '0.3';
+my $updated = '12/03/2021';
 
-use strict; use warnings; use Getopt::Long qw(GetOptions);
+use strict; use warnings; use Getopt::Long qw(GetOptions); use File::Basename;
 
 my $usage = <<"OPTIONS";
 NAME		${name}
@@ -22,7 +22,9 @@ USAGE		${name} \\
 		  -d NCBI_16S/16S_ribosomal_RNA \\
 		  -e 1e-05 \\
 		  -c 10 \\
-		  -t 10
+		  -t 10 \\
+		  -o MEGABLAST \\
+		  -v
 
 OPTIONS:
 -k (--task)	megablast, dc-megablast, blastn [default = megablast]
@@ -31,6 +33,8 @@ OPTIONS:
 -e (--evalue)	1e-05, 1e-10 or other [default = 1e-05]
 -c (--culling)	culling limit [default = 10]
 -q (--query)	fasta file(s) to be queried
+-o (--outdir)	Output directory [Default: ./]
+-v (--verbose)	Adds verbosity
 OPTIONS
 die "\n$usage\n" unless@ARGV;
 
@@ -41,6 +45,8 @@ my $threads = '2';
 my $evalue = '1e-05';
 my $culling = '1';
 my @query = ();
+my $outdir = './';
+my $verbose;
 
 GetOptions(
     'k|task=s' => \$task,
@@ -49,21 +55,43 @@ GetOptions(
 	'e|evalue=s' => \$evalue,
 	'c|culling=i' => \$culling,
 	'q|query=s@{1,}' => \@query,
+	'o|outdir=s' => \$outdir,
+	'v|verbose' => \$verbose
 );
 
-## Running BLAST
-while (my $tmp = shift@query){
-	system "echo Running $task on $tmp...";
-	system "blastn -task $task -num_threads $threads -query $tmp -db $db -evalue $evalue -culling_limit $culling -outfmt '6 qseqid sseqid pident length bitscore evalue staxids sskingdoms sscinames sblastnames' -out $tmp.$task";
-	system "echo Checking for sequences in $tmp with no hits using $task against $db...";
-	open BLAST, "<", "$tmp.$task" or die "Can't read file $tmp.$task $!\n";
+## Creating output directory
+unless (-e $outdir){
+	mkdir ($outdir, 0755) or die "Can't create output directory $outdir: $!\n";
+}
+if ($verbose){ print "\nFASTA output directory: $outdir\n"; }
+
+## Running BLAST homology searches
+while (my $query = shift@query){
+	my $basename = fileparse($query);
+
+	## Running BLAST
+	if ($verbose){ print "Running $task on $query...\n";}
+	system "blastn \\
+		-task $task \\
+		-num_threads $threads \\
+		-query $query \\
+		-db $db \\
+		-evalue $evalue \\
+		-culling_limit $culling \\
+		-outfmt '6 qseqid sseqid pident length bitscore evalue staxids sskingdoms sscinames sblastnames' \\
+		-out ${outdir}/$query.$task";
+	
+	## Checking for queries without hits in BLAST homology searches
+	if ($verbose){ print "Checking for sequences in $query with no hits using $task against $db...\n"; }
+	open BLAST, "<", "$query.$task" or die "Can't read file $query.$task: $!\n";
 	my %db;
 	while (my $line = <BLAST>){
 		my @array = split("\t", $line);
 		$db{$array[0]} = $array[1];
 	}
-	open FASTA, "<", "$tmp" or die "Can't read file $tmp $!\n";
-	open NOHIT, ">", "$tmp.$task.nohit" or die "Can't write to file $tmp.$task.nohit $!\n";
+
+	open FASTA, "<", "$query" or die "Can't read file $query: $!\n";
+	open NOHIT, ">", "${outdir}/$query.$task.nohit" or die "Can't write to file $query.$task.nohit: $!\n";
 	while (my $line = <FASTA>){
 		chomp $line;
 		if ($line =~ /^>(\S+)/){

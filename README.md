@@ -71,7 +71,9 @@ megablast.pl \
    -d NCBI_16S/16S_ribosomal_RNA \
    -e 1e-05 \
    -c 10 \
-   -t 10
+   -t 10 \
+   -o MEGABLAST \
+   -v
 ```
 
 Options for [megablast.pl](https://github.com/PombertLab/ID16S/blob/master/megablast.pl) are:
@@ -82,6 +84,8 @@ Options for [megablast.pl](https://github.com/PombertLab/ID16S/blob/master/megab
 -e (--evalue)	1e-05, 1e-10 or other [default = 1e-05]
 -c (--culling)	culling limit [default = 10]
 -q (--query)	fasta file(s) to be queried
+-o (--outdir)	Output directory [Default: ./]
+-v (--verbose)	Adds verbosity
 ```
 
 To reconstruct the composition of the datasets from the BLAST homology searches, we can use [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxid_dist.pl). This script will generate output files per requested taxonomic rank, up to the superkingdom rank.
@@ -91,7 +95,7 @@ To use [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxid_dis
 taxid_dist.pl \
    -n TaxDumps/nodes.dmp \
    -a TaxDumps/names.dmp \
-   -b FASTA/*.megablast \
+   -b MEGABLAST/*.megablast \
    -e 1e-75 \
    -h 1 \
    -r species genus family order class phylum \

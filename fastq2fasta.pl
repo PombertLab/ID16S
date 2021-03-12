@@ -22,7 +22,7 @@ OPTIONS
 die "\n$usage\n" unless @ARGV;
 
 my @fq;
-my $outdir;
+my $outdir = './';
 my $verbose;
 GetOptions(
 	'f|fastq=s@{1,}' => \@fq,
