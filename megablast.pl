@@ -67,8 +67,7 @@ if ($verbose){ print "\nFASTA output directory: $outdir\n"; }
 
 ## Running BLAST homology searches
 while (my $query = shift@query){
-	my ($basename, $path) = fileparse($query);
-	print "$basename\n";
+	my $basename = fileparse($query);
 
 	## Running BLAST
 	if ($verbose){ print "Running $task on $query...\n";}
@@ -80,11 +79,11 @@ while (my $query = shift@query){
 		-evalue $evalue \\
 		-culling_limit $culling \\
 		-outfmt '6 qseqid sseqid pident length bitscore evalue staxids sskingdoms sscinames sblastnames' \\
-		-out ${outdir}/$query.$task";
+		-out ${outdir}/$basename.$task";
 	
 	## Checking for queries without hits in BLAST homology searches
 	if ($verbose){ print "Checking for sequences in $query with no hits using $task against $db...\n"; }
-	open BLAST, "<", "${outdir}/$query.$task" or die "Can't read file $query.$task: $!\n";
+	open BLAST, "<", "${outdir}/$basename.$task" or die "Can't read file $basename.$task: $!\n";
 	my %db;
 	while (my $line = <BLAST>){
 		my @array = split("\t", $line);
@@ -92,7 +91,7 @@ while (my $query = shift@query){
 	}
 
 	open FASTA, "<", "$query" or die "Can't read file $query: $!\n";
-	open NOHIT, ">", "${outdir}/$query.$task.nohit" or die "Can't write to file $query.$task.nohit: $!\n";
+	open NOHIT, ">", "${outdir}/$basename.$task.nohit" or die "Can't write to file $basename.$task.nohit: $!\n";
 	while (my $line = <FASTA>){
 		chomp $line;
 		if ($line =~ /^>(\S+)/){
