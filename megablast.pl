@@ -28,11 +28,11 @@ USAGE		${name} \\
 
 OPTIONS:
 -k (--task)	megablast, dc-megablast, blastn [default = megablast]
+-q (--query)	fasta file(s) to be queried
 -d (--db)	NCBI 16S Microbial Database to query [default = 16S_ribosomal_RNA]
--t (--threads)	CPUs to use [default = 10]
 -e (--evalue)	1e-05, 1e-10 or other [default = 1e-05]
 -c (--culling)	culling limit [default = 10]
--q (--query)	fasta file(s) to be queried
+-t (--threads)	CPUs to use [default = 10]
 -o (--outdir)	Output directory [Default: ./]
 -v (--verbose)	Adds verbosity
 OPTIONS
