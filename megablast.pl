@@ -63,7 +63,7 @@ GetOptions(
 unless (-e $outdir){
 	mkdir ($outdir, 0755) or die "Can't create output directory $outdir: $!\n";
 }
-if ($verbose){ print "\nFASTA output directory: $outdir\n"; }
+if ($verbose){ print "\nBLAST output directory: $outdir\n"; }
 
 ## Running BLAST homology searches
 while (my $query = shift@query){
