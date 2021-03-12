@@ -68,6 +68,7 @@ if ($verbose){ print "\nFASTA output directory: $outdir\n"; }
 ## Running BLAST homology searches
 while (my $query = shift@query){
 	my $basename = fileparse($query);
+	print "$basename\n";
 
 	## Running BLAST
 	if ($verbose){ print "Running $task on $query...\n";}
