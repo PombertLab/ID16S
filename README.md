@@ -51,7 +51,10 @@ The ID16S pipeline consists of a few simple steps:
 ## Example
 We can use the FASTQ files located in the Example/ folder to test the installation of the pipeline. To convert the FASTQ files to FASTA format with [fastq2fasta.pl](https://github.com/PombertLab/ID16S/blob/master/fastq2fasta.pl), simply type:
 ```Bash
-fastq2fasta.pl -f Example/*.fastq -o FASTA -v
+fastq2fasta.pl \
+   -f Example/*.fastq \
+   -o FASTA \
+   -v
 ```
 
 Options for [fastq2fasta.pl](https://github.com/PombertLab/ID16S/blob/master/fastq2fasta.pl) are:
