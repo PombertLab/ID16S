@@ -2,7 +2,7 @@
 ## Pombert Lab, 2018
 my $name = 'taxid_dist.pl';
 my $version = '0.8a';
-my $updated = '12/03/2021';
+my $updated = '2021-03-12';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions); use File::Basename;
 

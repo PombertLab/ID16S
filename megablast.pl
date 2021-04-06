@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT 2018
 my $name = 'megablast.pl';
-my $version = '0.3';
-my $updated = '12/03/2021';
+my $version = '0.3a';
+my $updated = '2021-04-06';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions); use File::Basename;
 
@@ -95,8 +95,8 @@ while (my $query = shift@query){
 	while (my $line = <FASTA>){
 		chomp $line;
 		if ($line =~ /^>(\S+)/){
-			if (exists $db{$1}){next;}
-			else {print NOHIT "$1\n";}
+			if (exists $db{$1}){ next; }
+			else { print NOHIT "$1\n"; }
 		}
 	}
 }

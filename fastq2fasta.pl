@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab, 2018
 my $name = 'fastq2fasta.pl';
-my $version = '0.2';
-my $updated = '12/03/2021';
+my $version = '0.2a';
+my $updated = '2021-04-06';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions); use File::Basename;
 
@@ -13,7 +13,10 @@ VERSION	${version}
 UPDATED	${updated}
 SYNOPSIS	Converts FASTQ files to FASTA format (no quality scores)
 
-COMMAND	${name} -f *.fastq -o FASTA -v
+COMMAND	${name} \\
+		  -f *.fastq \\
+		  -o FASTA \\
+		  -v
 
 -f (--fastq)	FASTQ files to convert
 -o (--outdir)	Output directory [Default: ./]
