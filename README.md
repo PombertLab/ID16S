@@ -7,7 +7,7 @@
 * [References](#References)
 
 ## Introduction
-The ID16S pipeline reconstructs the composition of bacterial species from a multifasta file of 16S amplicon sequences. Inferences are derived from [BLAST](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) homology searches against the NCBI 16S Microbial database. Please note that the compositions inferred will not take into account variations in rDNA copy numbers. For a good overview of this issue, please see the excellent opinion [piece](https://doi.org/10.1016/j.tim.2020.05.019) by Lavrinienko *et al.*
+The ID16S pipeline reconstructs the composition of bacterial species from a multifasta file of 16S amplicon sequences. Inferences are derived from [BLAST](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) homology searches against the NCBI 16S Microbial database. Please note that the compositions inferred will not take into account variations in rDNA copy numbers. For a good overview of this issue, please see this excellent [review](https://doi.org/10.1016/j.tim.2020.05.019) by Lavrinienko *et al.*
 
 The ID16S pipeline was tested on Nanopore 1D reads obtained with the 16S Barcoding Kit (SQK-RAB204). Identification accuracy parallels that of the Nanopore sequencing reads. This pipeline should work on all 16S datasets but longer sequencing reads are preferable.
 
