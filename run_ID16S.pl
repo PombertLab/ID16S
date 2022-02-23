@@ -182,8 +182,8 @@ system("$ID16S_dir/Core_scripts/megablast.pl \\
 
 system("$ID16S_dir/Core_scripts/taxid_dist.pl \\
 		  --blast $outdir/BLAST/*.$task \\
-		  --nodes \\
-		  --names \\
+		  --nodes $db/TaxDump/nodes.dmp \\
+		  --names $db/TaxDump/names.dmp \\
 		  --evalue $f_evalue \\
 		  --hits $hits \\
 		  --ranks @ranks \\
@@ -201,15 +201,20 @@ system("$ID16S_dir/Core_scripts/taxid_dist.pl \\
 #			  -o .tsv
 
 # OPTIONS
-# -s (--sample)   File output from run_Taxonomized.pl
-# -d (--db)       Directory of databases created by create_database.pl
+# -s (--sample)	File output from run_Taxonomized.pl
+# -d (--db)		Directory of databases created by create_database.pl
+# -n (--names)	NCBI's names.dmp file
+# -o (--output)	Output filename [Default = Normalized_Microbiome_Composition.tsv]
 
 open(NNORM,$nonnormal_dir);
 
 while (my $file = readdir(NNORM)){
 	unless(-d $file){
 		system("$ID16S_dir/Normalization_scripts/get_organism_statistics.pl \\
-				--sample
+				  --sample $nonnormal_dir/$file \\
+				  --db $db/Normalization_DB \\
+				  --name $db/TaxDump/names.dmp \\
+				  --output $normal_dir/$file.normalized;
 		");
 	}
 }
