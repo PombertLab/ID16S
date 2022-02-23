@@ -109,7 +109,7 @@ if(@fasta){
 	}
 }
 elsif(@fastq){
-	system("$ID16S_dir/fastq2fasta.pl \\
+	system("$ID16S_dir/Core_scripts/fastq2fasta.pl \\
 			  --fasta @fastq \\
 			  --outdir $fasta_dir
 	");
@@ -145,7 +145,7 @@ else{
 # -n (--ntaxids)	Exclude from search taxids from file ## one taxid per line
 # -v (--verbose)	Adds verbosity
 
-system("$ID16S_dir/megablast.pl \\
+system("$ID16S_dir/Core_scripts/megablast.pl \\
 		  --task $task \\
 		  --query $fasta_dir/*.fasta \\
 		  --evalue $p_evalue \\
@@ -180,7 +180,7 @@ system("$ID16S_dir/megablast.pl \\
 # 		# subspecies strain species genus family order class phylum superkingdom 'no rank'
 # -v (--verbose)	Adds verbosity
 
-system("$ID16S_dir/taxid_dist.pl \\
+system("$ID16S_dir/Core_scripts/taxid_dist.pl \\
 		  --blast $outdir/BLAST/*.$task \\
 		  --nodes \\
 		  --names \\
@@ -194,8 +194,22 @@ system("$ID16S_dir/taxid_dist.pl \\
 ## get_organism_statistics
 ###################################################################################################
 
-# USAGE       $name \\
+# USAGE		get_organism_statistics.pl \
+#			  -s Paul/SUMMARY/bc04_16S.fasta.megablast.genus \
+#			  -d ID16S/Complete-Assemblies_rRNA_16S_DBs/ \
+#			  -n ID16S/names.dmp \
+#			  -o .tsv
 
 # OPTIONS
 # -s (--sample)   File output from run_Taxonomized.pl
 # -d (--db)       Directory of databases created by create_database.pl
+
+open(NNORM,$nonnormal_dir);
+
+while (my $file = readdir(NNORM)){
+	unless(-d $file){
+		system("$ID16S_dir/Normalization_scripts/get_organism_statistics.pl \\
+				--sample
+		");
+	}
+}
