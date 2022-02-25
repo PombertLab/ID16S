@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab 2022
 my $name = "run_ID16S.pl";
-my $version = "0.1";
-my $updated = "2022-02-18";
+my $version = "0.1a";
+my $updated = "2022-02-24";
 
 use strict;
 use warnings;
@@ -22,8 +22,8 @@ USAGE		${name} \\
 OPTIONS
 -fa (--fasta)	FASTA files to run
 -fq (--fastq)	FASTQ files to convert then run
--co (--concat)	Concatenate all results into a single file
--o (--outdir)	Output direcotry [Default = ID16S_RESULTS]
+-co (--concat)	Concatenate all results into a single file [Default: off]
+-o (--outdir)	Output directory [Default = \$ID16S_HOME]
 -d (--db)		Path to 16IDS_DB download [Default = \$ID16S_DB]
 
 ADVANCED
@@ -41,7 +41,7 @@ die("\n$usage\n") unless(@ARGV);
 my @fastq;
 my @fasta;
 my $concat;
-my $outdir = "ID16S_RESULTS";
+my $outdir;
 my $db;
 my $threads = 10;
 my $culling = 10;
@@ -70,6 +70,8 @@ my $blast_dir = "$outdir/BLAST";
 my $nonnormal_dir = "$outdir/NonNormalized";
 my $normal_dir = "$outdir/Normalized";
 
+my @output_directories = ($fasta_dir,$blast_dir,$nonnormal_dir,$normal_dir);
+
 my ($run_ID16S,$ID16S_dir) = fileparse($0);
 
 if(exists $ENV{"ID16S_DB"}){
@@ -77,17 +79,27 @@ if(exists $ENV{"ID16S_DB"}){
 }
 else{
 	unless($db){
-		print("\$ID16S is not set as an enviroment variable and -d (--db) was not provided.\n");
-		print("To use run_ID16S.pl, please add \$ID16S to the enviroment or specify path with -d (--db)\n");
+		print STDERR ("\$ID16S_DB is not set as an enviroment variable and -d (--db) was not provided.\n");
+		print("To use run_ID16S.pl, please add \$ID16S_DB to the enviroment or specify path with -d (--db)\n");
 		exit;
 	}
 }
 
-unless(-d $outdir){
-	make_path($fasta_dir,{mode => 0755});
-	mkdir($blast_dir,0755);
-	mkdir($nonnormal_dir,0755);
-	mkdir($normal_dir,0755);
+if(exists $ENV{"ID16S_HOME"}){
+	$outdir = $ENV{"ID16S_HOME"};
+}
+else{
+	unless($outdir){
+		print STDERR ("\$ID16S_HOME is not set as an enviroment variable and -o (--outdir) was not provided.\n");
+		print ("To use run_ID16S.pl, please add \$ID16S_HOME to the enviroment or specify path with -o (--outdir)\n");
+		exit;
+	}
+}
+
+foreach my $dirs (@output_directories){
+	unless(-d $dirs){
+		make_path($dirs,{mode=>0755});
+	}
 }
 
 ###################################################################################################

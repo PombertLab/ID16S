@@ -32,6 +32,7 @@ my $config_file = '~/.bashrc';
 
 GetOptions(
 	'w|work_dir=s' => \$path,
+	'c|config=s' => \$config_file,
 );
 
 my $dbpath = "$path/ID16S_DB";
@@ -40,7 +41,7 @@ unless(-d $path){
 	make_path($dbpath,{mode=>0755}) or die("Unable to create database directory $dbpath: $!\n");
 }
 
-open CONFIG, ">>", $config_file or die("Unable to create configuration file $config_file: $!\n");
+open CONFIG, ">>", $config_file or die("Unable to access to configuration file $config_file: $!\n");
 
 ###################################################################################################
 ## ID16S_HOME and ID16S_DB variables
@@ -60,5 +61,3 @@ print CONFIG ('# Adding NCBI TaxDB to BLASTDB variable'."\n");
 print CONFIG ('export BLASTDB=$BLASTDB:$ID16_DB/TaxDB'."\n");
 
 close CONFIG;
-
-system "source $config_file";

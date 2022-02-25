@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab 2022
 my $name = "download_ID16S_dbs.pl";
-my $version = "0.1";
-my $updated = "2022-02-21";
+my $version = "0.1a";
+my $updated = "2022-02-24";
 
 use strict;
 use warnings;
@@ -14,50 +14,66 @@ my $usage = <<"EXIT";
 NAME		${name}
 VERSION		${version}
 UPDATED		${updated}
-SYNOPSIS
+SYNOPSIS	This script downloads the required databases from NCBI, with the option of creating a 
+		new normalization database.
 
-USAGE
+USAGE		${name} \\
+			  -d \\
+			  -o ID16S_DB 
 
 OPTIONS
--m (--make)		Download NCBI genomes for 'Bacteria' and make new normalization database [Default: Off]
--o (--outdir)	Output directory [Default = ID16S_DB]
+-d (--download)	Download NCBI databases
+-c (--create)	Download genomes for 'Bacteria' and create a new normalization database [Default: Off]
+-o (--outdir)	Output directory [Default = \$ID16S_DB]
 EXIT
 
 die("\n$usage\n") unless(@ARGV);
 
+my $download;
 my $make;
-my $outdir = "ID16S_DB";
+my $outdir;
 
 GetOptions(
-	'-m|--make' => \$make,
-	'-o|--outdir=s' => \$outdir,
+	'd|download' => \$download,
+	'c|create' => \$make,
+	'o|outdir=s' => \$outdir,
 );
 
+unless($download){
+	die("\n$usage\n");
+}
+
 my ($download_script,$ID16S_dir) = fileparse($0);
+
+unless($outdir){
+	if($ENV{"ID16S_DB"}){
+		$outdir = $ENV{"ID16S_DB"};
+	}
+	else{
+		print STDERR ("\$ID16S_DB is not set as an enviroment variable and -o (--outdir) was not provided.\n");
+		print("To use $name, please add \$ID16S_DB to the enviroment or specify path with -o (--outdir)\n");
+		exit;
+	}
+}
 
 my $NCBI_16S_dir = "$outdir/NCBI_16S";
 my $TaxDB_dir = "$outdir/TaxDB";
 my $TaxDump_dir = "$outdir/TaxDump";
-my $RNA_16S_dir = "$outdir/16S_ribosomal_RNA";
 my $genomes_dir = "$outdir/NCBI_GBFF_Files";
 my $normal_dir = "$outdir/Normalization_DB";
 
-unless(-d $outdir){
-	make_path($NCBI_16S_dir,{mode => 0755}) or die("Unable to make directory $NCBI_16S_dir: $!\n");
-	make_path($TaxDB_dir,{mode => 0755}) or die("Unable to make directory $TaxDB_dir: $!\n");
-	make_path($TaxDump_dir,{mode => 0755}) or die("Unable to make directory $TaxDump_dir: $!\n");
-	make_path($RNA_16S_dir,{mode => 0755}) or die("Unable to make directory $RNA_16S_dir: $!\n");
-	if($make){
-		make_path($genomes_dir,{mode => 0755}) or die("Unable to make directory $genomes_dir: $!\n");
+my @dirs = ($NCBI_16S_dir,$TaxDB_dir,$TaxDump_dir,$genomes_dir,$normal_dir);
+
+foreach my $dir (@dirs){
+	unless(-d $dir){
+		make_path($dir,{mode => 0755}) or die("Unable to create directory $dir: $!\n");
 	}
-	make_path($normal_dir,{mode => 0755}) or die("Unable to make directory $normal_dir: $!\n");
 }
 
 ###################################################################################################
 ## Downloading NCBI 16S Database
 ###################################################################################################
-
-system "wget ftp://ftp.ncbi.nih.gov/blast/db/16S_ribosomal_RNA.tar.gz -O $NCBI_16S_dir";
+system "wget ftp://ftp.ncbi.nih.gov/blast/db/16S_ribosomal_RNA.tar.gz -O $NCBI_16S_dir/16S_ribosomal_RNA.tar.gz";
 system "tar -zxvf $NCBI_16S_dir/16S_ribosomal_RNA.tar.gz --directory $NCBI_16S_dir";
 system "rm $NCBI_16S_dir/16S_ribosomal_RNA.tar.gz";
 
@@ -65,7 +81,7 @@ system "rm $NCBI_16S_dir/16S_ribosomal_RNA.tar.gz";
 ## Downloading NCBI Taxonomy Database
 ###################################################################################################
 
-system "wget ftp://ftp.ncbi.nih.gov/blast/db/taxdb.tar.gz -O $TaxDB_dir";
+system "wget ftp://ftp.ncbi.nih.gov/blast/db/taxdb.tar.gz -O $TaxDB_dir/taxdb.tar.gz";
 system "tar -zxvf $TaxDB_dir/taxdb.tar.gz --directory $TaxDB_dir";
 system "rm $TaxDB_dir/taxdb.tar.gz";
 
@@ -73,7 +89,7 @@ system "rm $TaxDB_dir/taxdb.tar.gz";
 ## Downloading NCBI Taxonomy dump Files
 ###################################################################################################
 
-system "wget ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz -O $TaxDump_dir";
+system "wget ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz -O $TaxDump_dir/taxdump.tar.gz";
 system "tar -zxvf $TaxDump_dir/taxdump.tar.gz --directory $TaxDump_dir";
 system "rm $TaxDump_dir/taxdump.tar.gz";
 
@@ -81,11 +97,26 @@ system "rm $TaxDump_dir/taxdump.tar.gz";
 ## Downloading 'Bacteria' GBFF species
 ###################################################################################################
 CHECK:
-if($make){
+if(defined $make){
 	while(0==0){
+		ASK:
 		print("\nRecreation of normalization database will require a download of ");
 		print(".gbff files of all 'Bacteria' in NCBI. This is a sizeable download ");
-		print("(~250Gb decompressed) and may take a while to download. ")
+		print("(~250Gb decompressed) and may take a while to download. ");
+		print("Are you sure you would like to download? (y/n)\n\tSelection: ");
+		chomp(my $response = lc(<STDIN>));
+		if($response eq "y"){
+			goto VERIFIED;
+		}
+		elsif($response eq "n"){
+			undef $make;
+			goto CHECK;
+		}
+		else{
+			print("$response is an invalid selection.\n");
+			goto ASK;
+		}
+		
 	}
 	VERIFIED:
 	print "\nDownloading datasets program from NCBI\n";
@@ -123,6 +154,6 @@ if($make){
 	closedir(GENOMES);
 }
 else{
-	system "cp $ID16S_dir/PreBuilt_Normalization_DB/*.* $normal_dir/";
+	system "cp $ID16S_dir/Normalization_scripts/Prebuilt_Normalization_DB/*.* $normal_dir/";
 }
 
