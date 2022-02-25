@@ -33,10 +33,10 @@ my $names_file;
 my $output = "Normalized_Microbiome_Composition.tsv";
 
 GetOptions(
-	'-s|--sample=s' => \$sample,
-	'-d|--db=s' => \$db,
-	'-n|--names_file=s' => \$names_file,
-	'-o|--output=s' => \$output,
+	's|sample=s' => \$sample,
+	'd|db=s' => \$db,
+	'n|names_file=s' => \$names_file,
+	'o|output=s' => \$output,
 );
 
 my @preferred_ranks = ( "species", "genus", "family", "order", "class", "phylum", "superkingdom");
