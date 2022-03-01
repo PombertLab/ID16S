@@ -120,7 +120,7 @@ if(defined $make){
 	}
 	VERIFIED:
 	print "\nDownloading datasets program from NCBI\n";
-	system "curl https://ftp.ncbi.nlm.nih.gov/pub/datasets/command-line/LATEST/linux-amd64/datasets -o $outdir/datasets";
+	system "curl https://ftp.ncbi.nlm.nih.gov/pub/datasets/command-line/LATEST/linux-amd64/datasets -o $genomes_dir/datasets";
 	system "chmod +x $outdir/datasets";
 
 	unless(-d "$genomes_dir/ncbi_datasets.zip"){
