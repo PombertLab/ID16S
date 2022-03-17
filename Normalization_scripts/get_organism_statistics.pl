@@ -1,12 +1,13 @@
 #!/usr/bin/perl
 ## Pombert Lab 2022
 my $name = "get_organism_statistics.pl";
-my $version = "0.4b";
-my $updated = "2022-02-23";
+my $version = "0.5";
+my $updated = "2022-03-16";
 
 use warnings;
 use strict;
 use Getopt::Long qw(GetOptions);
+use File::Path qw(make_path);
 
 my $usage = << "EXIT";
 NAME		${name}
@@ -21,7 +22,7 @@ OPTIONS
 -s (--sample)	File output from run_Taxonomized.pl
 -d (--db)	Directory of databases created by create_database.pl
 -n (--names)	NCBI names.dmp file
--o (--output)	Output filename [Default=Normalized_Microbiome_Composition.tsv]
+-o (--outdir)	Output directory [Default=Normalized]
 
 EXIT
 
@@ -30,13 +31,13 @@ die("\n$usage\n") unless(@ARGV);
 my $sample;
 my $db;
 my $names_file;
-my $output = "Normalized_Microbiome_Composition.tsv";
+my $outdir = "Normalized";
 
 GetOptions(
 	's|sample=s' => \$sample,
 	'd|db=s' => \$db,
 	'n|names_file=s' => \$names_file,
-	'o|output=s' => \$output,
+	'o|output=s' => \$outdir,
 );
 
 my @preferred_ranks = ( "species", "genus", "family", "order", "class", "phylum", "superkingdom");
@@ -48,6 +49,10 @@ my %preferred_ranks = ( "species" => 0,
 						"phylum" => 5,
 						"superkingdom" => 6)
 ;
+
+unless(-d $outdir){
+	make_path($outdir,{mode => 0755});
+}
 
 #######################################################################################################################
 ## Obtain information from provided sample
@@ -61,12 +66,9 @@ my %sample;
 while(my $line = <SAMPLE>){
 	chomp($line);
 	my @data = split("\t",$line);
-	if($line =~ /^TaxID/){
-		next;
-	}
 	unless($rank){
 		$rank = $data[0];
-		($genes) = $data[4] =~ /\(total = (\d+)\)/;
+		($genes) = $data[3] =~ /\(total = (\d+)\)/;
 	}
 	else{
 		my $tax_id = $data[1];
@@ -76,6 +78,8 @@ while(my $line = <SAMPLE>){
 		$sample{$tax_id}[1] = $percentage;
 	}
 }
+
+close SAMPLE;
 
 #######################################################################################################################
 ## Creating taxon links from database file
@@ -96,21 +100,21 @@ while(my $line = <TAXON>){
 my $rank_pos = $preferred_ranks{$rank};
 
 ## Reorganize taxon links based on input file provided
-foreach my $key (keys(%taxon_links)){
+foreach my $taxid (keys(%taxon_links)){
 	for (my $i = 0; $i < int($rank_pos); $i++){
-		shift(@{$taxon_links{$key}});
+		shift(@{$taxon_links{$taxid}});
 	}
-	$taxon_links{$taxon_links{$key}[0]} = \@{$taxon_links{$key}};
-	undef($taxon_links{$key});
+	$taxon_links{$taxon_links{$taxid}[0]} = \@{$taxon_links{$taxid}};
+	undef($taxon_links{$taxid});
 }
 
 my @missing_taxons;
-foreach my $key (sort(keys(%sample))){
-	push(@missing_taxons,$key);
+foreach my $taxid (sort(keys(%sample))){
+	push(@missing_taxons,$taxid);
 }
 
 my %normalized;
-my $normalized_number_of_orgs = 0;
+my $normalized_composition;
 RANK:while(0==0){
 	## Stop looking for rRNA data if no more db files to look in
 	if($rank_pos < 0){
@@ -126,38 +130,49 @@ RANK:while(0==0){
 	## Add rRNA data from database into RAM
 	while(my $line = <DB_FILE>){
 		chomp($line);
-		my ($taxon,@rRNA_data) = split("\t",$line);
-		$rRNA_info{$taxon} = \@rRNA_data; 
+		unless($line =~ /^Organism/){
+			my ($name,$taxon,$rRNA_data) = split("\t",$line);
+			@{$rRNA_info{$taxon}} = split(";",$rRNA_data);
+		}
 	}
 
 	my $prev_rank_pos = $rank_pos;
 
 	## Look for rRNA data in the loaded database file
-	while(my $key = shift(@missing_taxons)){
+	while(my $taxid = shift(@missing_taxons)){
 
-		my $rank_ID = $taxon_links{$key}[0];
+		my $rank_ID = $taxon_links{$taxid}[0];
 
 		## If the information is found, get the statistical data
 		if($rRNA_info{$rank_ID}){
+			
 			## Obtain the rRNA data from the rank file using the corresponding taxID related to that rank
-			my ($samples,$min,$max,$mean,$median,$mode,$std) = @{$rRNA_info{$rank_ID}};
-			## Get the number of rRNA gene copies for the sample organism
-			my $copies = $sample{$key}[0];
-			## Normalize the number of organisms according to their rRNA copies
-			$normalized{$key}[1] = $rank_file;
-			$normalized{$key}[2] = ceil($copies/$max);
-			$normalized{$key}[3] = ceil($copies/$median);
-			$normalized_number_of_orgs += $normalized{$key}[3];
-			$normalized{$key}[4] = ceil($copies/$min);
+			my @counts = @{$rRNA_info{$rank_ID}};
+			@counts = sort({$a <=> $b}@counts);
+			my $mode = int(mode(@counts));
+
+			## Get non-normalized data
+			my $gene_count = $sample{$taxid}[0];
+			my $old_percentage = $sample{$taxid}[1];
+
+			## Add the number of normalized organisms to total count
+			$normalized_composition += $gene_count/$mode;
+			
+			$normalized{$taxid}[1] = $rank_file;
+			@{$normalized{$taxid}[2]} = @counts;
+			$normalized{$taxid}[3] = $gene_count;
+			$normalized{$taxid}[4] = $old_percentage;
+			$normalized{$taxid}[5] = $gene_count/$mode;
+
 		}
-		## If the information is not found, add key to the missing list
+		## If the information is not found, add taxid to the missing list
 		else{
 			## Get taxonomic information from the loaded links
-			push(@temp_missing,$key);
+			push(@temp_missing,$taxid);
 		}
 		## Shift the taxon information over
-		shift(@{$taxon_links{$key}});
-		$taxon_links{$key} = \@{$taxon_links{$key}};
+		shift(@{$taxon_links{$taxid}});
+		$taxon_links{$taxid} = \@{$taxon_links{$taxid}};
 	}
 	close DB_FILE;
 	## Reassign missing taxons
@@ -175,8 +190,6 @@ RANK:while(0==0){
 #######################################################################################################################
 ## Acquire names of organisms from their taxid
 #######################################################################################################################
-
-close SAMPLE;
 
 open NAMES, "<", $names_file or die "Unable to open $names_file: $!\n";
 
@@ -196,53 +209,72 @@ close NAMES;
 ## Print out results
 #######################################################################################################################
 
-open RESULTS, ">", $output or die "Unable to open $output: $!\n";
-print RESULTS ("###Organism Name\tTaxID\tTaxo Level\tMedian # of Organisms\tMin # of Organisms\tMax # of Organisms\tPrevious Percentage of Sample\tPercentage of Sample\tDelta\n");
+open RESULTS, ">", "$outdir/Normalized_Microbiome_Composition.tsv" or die "Unable to open $outdir/Normalized_Microbiome_Composition.tsv: $!\n";
+print RESULTS ("###Organism Name\tTaxID\tTaxo Level\tNon-normalized % of sample\tNormalized % of sample\tDelta\n");
+open LOG, ">", "$outdir/Normalized_Microbiome_Count.log";
+print LOG ("###Organism Name\tTaxID\tGene count\trRNA counts\n");
 
-foreach my $key ( sort {$normalized{$b}[3] <=> $normalized{$a}[3]} keys %normalized){
-	my $org_name = $normalized{$key}[0];
-	my $taxo_level = $normalized{$key}[1];
-	my $min = $normalized{$key}[2];
-	my $avg = $normalized{$key}[3];
-	my $max = $normalized{$key}[4];
-	my $old_percentage = $sample{$key}[1];
-	my $new_percentage = $avg/$normalized_number_of_orgs*100;
-	my $percent = sprintf("%4.2f",$new_percentage);
-	my $diff = diff($new_percentage,$old_percentage);
-	print RESULTS ("$org_name\t$key\t$taxo_level\t$avg\t$min\t$max\t$old_percentage\t$percent%\t$diff\n");
+foreach my $taxid (sort({$normalized{$b}[5] <=> $normalized{$a}[5]}(keys(%normalized)))){
+	
+	my $org_name = $normalized{$taxid}[0];
+	my $tax_level = $normalized{$taxid}[1];
+	my @counts = @{$normalized{$taxid}[2]};
+	my $gene_count = $normalized{$taxid}[3];
+	my $old_percentage = $normalized{$taxid}[4];
+	my $normalized_count = $normalized{$taxid}[5];
+
+	my @normalized_count;
+
+	foreach my $count (@counts){
+		push(@normalized_count,$count);
+	}
+
+	my $new_percentage = sprintf("%.2f",($normalized_count/$normalized_composition)*100);
+	my $delta = sprintf("%.2f",$new_percentage - $old_percentage);
+
+	print RESULTS ($org_name."\t".$taxid."\t".$tax_level."\t".$old_percentage."\t".$new_percentage."\t".$delta."\n");
+	print LOG ($org_name."\t".$taxid."\t".$gene_count."\t".join(";",@normalized_count)."\n");
 }
 
 close RESULTS;
+close LOG;
 
 #######################################################################################################################
 ## Subroutines
 #######################################################################################################################
 
-## Rounds a number up to the nearest whole number
-sub ceil{
-	my $number = $_[0];
-	my $trunc_number = int($number);
-	if ($number - $trunc_number > 0){
-		$trunc_number++;
-		return $trunc_number;
+sub mean {
+	my @data = @_;
+	my $count = 0;
+	foreach my $datum (@data){
+		$count += $datum;
 	}
-	else{
-		return $trunc_number;
-	}
+	return sprintf("%.2f",$count/scalar(@data));
 }
 
-## Gets the difference between the old and new composition
-sub diff{
-	my $new = $_[0];
-	my $old = $_[1];
-	if ($new > $old){
-		my $diff = $new - $old;
-		$diff = sprintf("%4.2f",$diff);
-		return "+$diff%";
+sub median {
+	my @data = @_;
+	my $median;
+	if(scalar(@data)%2 == 0){
+		$median = ($data[(scalar(@data)/2)-1] + $data[(scalar(@data)/2)])/2;
 	}
 	else{
-		my $diff = $old - $new;
-		$diff = sprintf("%4.2f",$diff);
-		return "-$diff%";
+		$median = $data[int(scalar(@data)/2)];
 	}
+	return sprintf("%.2f",$median);
+}
+
+sub mode {
+	my @data = @_;
+	my %rRNA;
+	foreach my $count (@data){
+		unless($rRNA{$count}){
+			$rRNA{$count} = 1;
+		}
+		else{
+			$rRNA{$count} += 1;
+		}
+	}
+	my ($top,@rest) = sort({$rRNA{$b} <=> $rRNA{$a}}(keys(%rRNA)));
+	return $top;
 }
