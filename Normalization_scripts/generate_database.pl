@@ -93,6 +93,9 @@ unless(-f "$outdir/raw_16S_data.dmp"){
 				}
 				if ($line =~ /\s+\/db_xref="taxon:(\d+)"/){
 					$tax_id = $1;
+					if($header){
+						goto STORE;
+					}
 				}
 				## If there is no header, parse the full file
 				if ($line =~ /^\s{1,5}(gene|rRNA|tRNA|CDS)/){
@@ -107,9 +110,13 @@ unless(-f "$outdir/raw_16S_data.dmp"){
 					}
 				}
 			}
+			STORE:
 			if($rRNA_count > 0){
 				$orgs_rna_count{$tax_id} = $rRNA_count;
 				print OUT $tax_id."\t".$rRNA_count."\n";
+				if($rRNA_count > 20){
+					print($org_file."\n")
+				}
 			}
 			else{
 				print("No 16S rRNA found for $org_file with TaxID of $tax_id!\n");
