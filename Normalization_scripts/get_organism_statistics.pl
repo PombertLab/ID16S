@@ -89,8 +89,8 @@ my %taxon_links;
 open TAXON, "<", "$db/taxon_links.tsv" or die("Unable to open file $db/taxon_links.tsv: $!\n");
 while(my $line = <TAXON>){
 	chomp($line);
-	my ($species, @data) = split("\t",$line);
-	$taxon_links{$species} = [$species,@data];
+	my ($taxid, @data) = split("\t",$line);
+	$taxon_links{$taxid} = [$taxid,@data];
 }
 
 #######################################################################################################################
@@ -101,11 +101,13 @@ my $rank_pos = $preferred_ranks{$rank};
 
 ## Reorganize taxon links based on input file provided
 foreach my $taxid (keys(%taxon_links)){
-	for (my $i = 0; $i < int($rank_pos); $i++){
-		shift(@{$taxon_links{$taxid}});
+	if(int($rank_pos) > 0){
+		for (my $i = 0; $i < int($rank_pos); $i++){
+			shift(@{$taxon_links{$taxid}});
+		}
+		@{$taxon_links{$taxon_links{$taxid}[0]}} = @{$taxon_links{$taxid}};
+		undef($taxon_links{$taxid});
 	}
-	$taxon_links{$taxon_links{$taxid}[0]} = \@{$taxon_links{$taxid}};
-	undef($taxon_links{$taxid});
 }
 
 my @missing_taxons;
@@ -142,6 +144,11 @@ RANK:while(0==0){
 	while(my $taxid = shift(@missing_taxons)){
 
 		my $rank_ID = $taxon_links{$taxid}[0];
+
+		unless($rank_ID){
+			print("  [W]  $taxid is not found in NCBI's node.dmp!\n");
+			next RANK;
+		}
 
 		## If the information is found, get the statistical data
 		if($rRNA_info{$rank_ID}){
