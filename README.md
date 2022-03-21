@@ -7,7 +7,7 @@
 * [References](#References)
 
 ## Introduction
-The ID16S pipeline reconstructs the composition of bacterial species from a multifasta file of 16S amplicon sequences. Inferences are derived from [BLAST](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) homology searches against the NCBI 16S Microbial database. Please note that the compositions inferred will not take into account variations in rDNA copy numbers. For a good overview of this issue, please see this excellent [review](https://doi.org/10.1016/j.tim.2020.05.019) by Lavrinienko *et al.*
+The ID16S pipeline reconstructs the composition of bacterial species from a multifasta file of 16S amplicon sequences. Inferences are derived from [BLAST](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) homology searches against the NCBI 16S Microbial database. Normalization based on rRNA copy is performed by utilizing a database produced from all completely assembled bacterial genome annotations within RefSeq[](). For a good overview of rRNA copy variation, please see this excellent [review](https://doi.org/10.1016/j.tim.2020.05.019) by Lavrinienko *et al.*
 
 The ID16S pipeline was tested on Nanopore 1D reads obtained with the 16S Barcoding Kit (SQK-RAB204). Identification accuracy parallels that of the Nanopore sequencing reads. This pipeline should work on all 16S datasets but longer sequencing reads are preferable.
 
@@ -20,27 +20,41 @@ Note that for large datasets, BLAST homology searches will take a while to compl
 #### Optional
 - [guppy](https://nanoporetech.com/) (for FAST5 basecalling)
 
-## Installation
-To download this pipeline from the command line with Git, then add it to the $PATH variable (for the current session), type:
+## Getting started
+<b>Installing ID16S<b>
+
+The ID16S pipeline can be downloaded with Git:
 ```Bash
-git clone https://github.com/PombertLab/ID16S.git
-cd ID16S/
-export PATH=$PATH:$(pwd)
+git clone --recursive https://github.com/PombertLab/ID16S.git
 ```
+
+To run the ID16S pipeline, the enviroment needs to be setup:
+```Bash
+ID16S/setup_ID16S.pl \
+  -w /desired/output/path \
+  -d /desired/database/path \
+  -c /desired/configuration/file
+
+source $CONFIG_FILE
+```
+
+<b>Downloading databases<b>
 
 A total of 3 NCBI datasets are required for the ID16S pipeline:
 1. The NCBI 16S Microbial database - [16S_ribosomal_RNA.tar.gz](https://ftp.ncbi.nlm.nih.gov/blast/db/16S_ribosomal_RNA.tar.gz)
 2. The NCBI Taxonomy database - [taxdb.tar.gz](https://ftp.ncbi.nlm.nih.gov/blast/db/taxdb.tar.gz)
 3. The NCBI Taxonomy dumps - [taxdump.tar.gz](https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz)
 
-These datasets can be downloaded manually or with [download_DBs.sh](https://github.com/PombertLab/ID16S/blob/master/download_DBs.sh). The later will download the NCBI datasets files in the current directory. To use it, simply type:
+The ID16S pipeline comes with a precompiled 16S rRNA database (updated March 2022), though an updated version can be created.
+
+The required databases can be downloaded as follows:
 ```Bash
-download_DBs.sh
+ID16S/download_ID16S_dbs.pl -d
 ```
 
-The NCBI Taxonomy database must be set in the BLASTDB environment variables. To set it for the current session, type:
+If an updated 16S rRNA database is desired, the addition of the ```Bash -c (--create)``` flag can be used:
 ```Bash
-export BLASTDB=$BLASTDB:$(pwd)/TaxDB
+ID16S/download_ID16S_dbs.pl -d -c
 ```
 
 ## Key steps
