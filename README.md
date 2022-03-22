@@ -2,7 +2,7 @@
 * [Introduction](#Introduction)
 * [Dependencies](#Dependencies)
 * [Installation](#Installation)
-* [Running ID16S](#Running-ID16S-via-run_ID16S.pl)
+* [Running ID16S](#Running-ID16S-via-run_ID16S)
 * [Step by Step](#Running-ID16S-step-wise)
 * [Example](#Example)
 * [References](#References)
@@ -58,7 +58,7 @@ If an updated 16S rRNA database is desired, the addition of the `-c (--create)` 
 ID16S/download_ID16S_dbs.pl -d -c
 ```
 
-## Running ID16S via run_ID16S.pl
+## Running ID16S via run_ID16S
 
 To run ID16S, provide [run_ID16S.pl](https://github.com/PombertLab/ID16S/blob/master/run_ID16S.pl) with the desired FASTA/Q files:
 ```Bash
