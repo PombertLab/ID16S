@@ -69,8 +69,8 @@ ID16S/run_ID16S.pl \
 
 run_ID16S.pl has a number of advanced parameters:
 ```
--o (--outdir)	Output directory [Default = \$ID16S_HOME]
--d (--db)	Path to 16IDS_DB download [Default = \$ID16S_DB]
+-o (--outdir)		Output directory [Default = \$ID16S_HOME]
+-d (--db)		Path to 16IDS_DB download [Default = \$ID16S_DB]
 -co (--concat)		Concatenate all results into a single file [Default: off]
 -t (--threads)		CPUs to use [default = 10]
 -cu (--culling)		Culling limit [default = 10]
