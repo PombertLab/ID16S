@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab, 2018
 my $name = 'taxid_dist.pl';
-my $version = '0.8a';
-my $updated = '2021-03-12';
+my $version = '0.8b';
+my $updated = '2021-03-22';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions); use File::Basename;
 
@@ -56,7 +56,7 @@ GetOptions(
 	'n|nodes=s' => \$node,
 	'a|names=s' => \$namedmp,
 	'b|blast=s@{1,}' => \@blast,
-	'e|value=s' => \$evalue,
+	'e|evalue=s' => \$evalue,
 	'h|hits=i' => \$maxhits,
 	'o|outdir=s' => \$outdir,
 	'r|ranks=s@{1,}' => \@ranks,
