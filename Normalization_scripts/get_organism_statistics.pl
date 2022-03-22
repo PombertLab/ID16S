@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab 2022
 my $name = "get_organism_statistics.pl";
-my $version = "0.5";
-my $updated = "2022-03-16";
+my $version = "0.5a";
+my $updated = "2022-03-22";
 
 use warnings;
 use strict;
@@ -52,7 +52,10 @@ my %preferred_ranks = ( "species" => 0,
 ;
 
 unless(-d $outdir){
-	make_path($outdir,{mode => 0755});
+	make_path("$outdir/Figure_files",{mode => 0755});
+}
+unless(-d "$outdir/Figure_files"){
+	make_path("$outdir/Figure_files",{mode => 0755});
 }
 
 #######################################################################################################################
@@ -222,7 +225,7 @@ $file_handle =~ s/\./\_/g;
 
 open RESULTS, ">", "$outdir/${file_handle}_Normalized_Microbiome_Composition.tsv" or die "Unable to open $outdir/${file_handle}_Normalized_Microbiome_Composition.tsv: $!\n";
 print RESULTS ("###Organism Name\tTaxID\tTaxo Level\tNon-normalized % of sample\tNormalized % of sample\tDelta\n");
-open LOG, ">", "$outdir/${file_handle}_Normalized_Microbiome_Count.log" or die "Unable to open $outdir/${file_handle}_Normalized_Microbiome_Count.log: $!\n";
+open LOG, ">", "$outdir/Figure_files/${file_handle}_Normalized_Microbiome_Count.log" or die "Unable to open $outdir/${file_handle}_Normalized_Microbiome_Count.log: $!\n";
 print LOG ("###Organism Name\tTaxID\tGene count\trRNA counts\n");
 
 foreach my $taxid (sort({$normalized{$b}[5] <=> $normalized{$a}[5]}(keys(%normalized)))){
