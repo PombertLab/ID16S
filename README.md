@@ -3,7 +3,7 @@
 * [Dependencies](#Dependencies)
 * [Installation](#Installation)
 * [Running ID16S](#Running-ID16S-via-run_ID16S.pl)
-* [Step by Step](#RunningID16S-step-wise)
+* [Step by Step](#Running-ID16S-step-wise)
 * [Example](#Example)
 * [References](#References)
 
