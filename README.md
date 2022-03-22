@@ -293,6 +293,52 @@ Staphylococcus hominis	1290	20	2.47%
 Staphylococcus succinus	61015	15	1.85%
 ```
 
+To normalize the composition by number of rRNA copies, we can use [get_organism_statistics.pl](https://github.com/PombertLab/ID16S/blob/master/get_organism_statistics.pl). This script will produce a file containing the rRNA-copy-normalized composition using the corresponding database for the taxonomic rank of the provided file.
+
+The output will look similar to:
+```Bash
+==> EXAMPLE2/Normalized/sample_2_fasta_megablast_class_Normalized_Microbiome_Composition.tsv <==
+###Organism Name	TaxID	Taxo Level	Non-normalized % of sample	Normalized % of sample	Delta
+Bacilli	91061	class	100.00	100.00	0.00
+
+==> EXAMPLE2/Normalized/sample_2_fasta_megablast_family_Normalized_Microbiome_Composition.tsv <==
+###Organism Name	TaxID	Taxo Level	Non-normalized % of sample	Normalized % of sample	Delta
+Staphylococcaceae	90964	family	98.76	98.86	0.10
+Bacillaceae	186817	family	0.87	0.61	-0.26
+Aerococcaceae	186827	family	0.12	0.22	0.10
+Listeriaceae	186820	family	0.12	0.17	0.05
+Enterococcaceae	81852	family	0.12	0.14	0.02
+
+==> EXAMPLE2/Normalized/sample_2_fasta_megablast_genus_Normalized_Microbiome_Composition.tsv <==
+###Organism Name	TaxID	Taxo Level	Non-normalized % of sample	Normalized % of sample	Delta
+Staphylococcus	1279	genus	98.39	98.51	0.12
+Nosocomiicoccus	489909	genus	0.12	0.22	0.10
+Salinicoccus	45669	genus	0.12	0.22	0.10
+Bacillus	1386	genus	0.25	0.17	-0.08
+Listeria	1637	genus	0.12	0.17	0.05
+Halobacillus	45667	genus	0.12	0.12	0.00
+Mammaliicoccus	2803850	genus	0.12	0.12	0.00
+Alkalihalophilus	2893060	genus	0.12	0.11	-0.01
+Vagococcus	2737	genus	0.12	0.11	-0.01
+
+==> EXAMPLE2/Normalized/sample_2_fasta_megablast_order_Normalized_Microbiome_Composition.tsv <==
+###Organism Name	TaxID	Taxo Level	Non-normalized % of sample	Normalized % of sample	Delta
+Bacillales	1385	order	99.75	99.38	-0.37
+Lactobacillales	186826	order	0.25	0.62	0.37
+
+==> EXAMPLE2/Normalized/sample_2_fasta_megablast_species_Normalized_Microbiome_Composition.tsv <==
+###Organism Name	TaxID	Taxo Level	Non-normalized % of sample	Normalized % of sample	Delta
+Staphylococcus kloosii	29384	genus	85.91	80.61	-5.30
+Staphylococcus hominis	1290	species	2.60	8.52	5.92
+Staphylococcus casei	201828	genus	2.97	2.78	-0.19
+Staphylococcus succinus	61015	genus	1.98	1.86	-0.12
+Staphylococcus croceilyticus	319942	genus	0.74	0.70	-0.04
+Staphylococcus ureilyticus	94138	genus	0.62	0.58	-0.04
+Staphylococcus gallinarum	1293	genus	0.37	0.35	-0.02
+Staphylococcus equorum	246432	genus	0.37	0.35	-0.02
+Staphylococcus carnosus	1281	species	0.25	0.32	0.07
+```
+
 ## References
 Altschul SF, Gish W, Miller W, Myers EW, Lipman DJ. **Basic local alignment search tool.** *J Mol Biol.* 1990 Oct 5;215(3):403-10. PMID: 2231712 DOI: [10.1016/S0022-2836(05)80360-2](https://doi.org/10.1016/s0022-2836(05)80360-2).
 
