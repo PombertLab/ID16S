@@ -22,10 +22,10 @@ USAGE		${name} \\
 OPTIONS
 -fa (--fasta)	FASTA files to run
 -fq (--fastq)	FASTQ files to convert then run
--o (--outdir)	Output directory [Default = \$ID16S_HOME]
--d (--db)	Path to 16IDS_DB download [Default = \$ID16S_DB]
 
 ADVANCED
+-o (--outdir)	Output directory [Default = \$ID16S_HOME]
+-d (--db)	Path to 16IDS_DB download [Default = \$ID16S_DB]
 -co (--concat)		Concatenate all results into a single file [Default: off]
 -t (--threads)		CPUs to use [default = 10]
 -cu (--culling)		Culling limit [default = 10]
