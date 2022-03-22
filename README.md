@@ -60,7 +60,7 @@ ID16S/download_ID16S_dbs.pl -d -c
 
 ## Running ID16S via run_ID16S.pl
 
-Finally, to run ID16S, provide the <i>run_ID16S.pl(https://github.com/PombertLab/ID16S/blob/master/run_ID16S.pl)</i> with the desired FASTA/Q files (multi-FASTA/Q files are supported):
+To run ID16S, provide the run_ID16S.pl(https://github.com/PombertLab/ID16S/blob/master/run_ID16S.pl) with the desired FASTA/Q files (multi-FASTA/Q files are supported):
 ```Bash
 ID16S/run_ID16S.pl \
   -fa /path/to/FASTA/files
