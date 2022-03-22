@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab 2022
 my $name = "run_ID16S.pl";
-my $version = "0.1a";
-my $updated = "2022-02-24";
+my $version = "0.2";
+my $updated = "2022-03-22";
 
 use strict;
 use warnings;
@@ -22,11 +22,11 @@ USAGE		${name} \\
 OPTIONS
 -fa (--fasta)	FASTA files to run
 -fq (--fastq)	FASTQ files to convert then run
--co (--concat)	Concatenate all results into a single file [Default: off]
 -o (--outdir)	Output directory [Default = \$ID16S_HOME]
--d (--db)		Path to 16IDS_DB download [Default = \$ID16S_DB]
+-d (--db)	Path to 16IDS_DB download [Default = \$ID16S_DB]
 
 ADVANCED
+-co (--concat)		Concatenate all results into a single file [Default: off]
 -t (--threads)		CPUs to use [default = 10]
 -cu (--culling)		Culling limit [default = 10]
 -k (--tasks)		megablast, dc-megablast, blastn [default = megablast]
@@ -56,6 +56,7 @@ GetOptions(
 	'fa|fasta=s{0,}' => \@fasta,
 	'co|concat=s' => \$concat,
 	'o|outdir=s' => \$outdir,
+	'd|db=s' => \$db,
 	'cu|culling=s' => \$culling,
 	't|threads=s' => \$threads,
 	'pe|p_evalue=s' => \$p_evalue,
@@ -120,9 +121,11 @@ if(@fasta){
 		system("cp $file $fasta_dir/$file");
 	}
 }
-elsif(@fastq){
+
+if(@fastq){
+	print("\nConverting FASTQ to FASTA with fastq2fasta.pl\n");
 	system("$ID16S_dir/Core_scripts/fastq2fasta.pl \\
-			  --fasta @fastq \\
+			  --fastq @fastq \\
 			  --outdir $fasta_dir
 	");
 }
@@ -157,6 +160,7 @@ else{
 # -n (--ntaxids)	Exclude from search taxids from file ## one taxid per line
 # -v (--verbose)	Adds verbosity
 
+print("\nRunning BLAST search on FASTA files with megablast.pl\n");
 system("$ID16S_dir/Core_scripts/megablast.pl \\
 		  --task $task \\
 		  --query $fasta_dir/*.fasta \\
@@ -192,6 +196,7 @@ system("$ID16S_dir/Core_scripts/megablast.pl \\
 # 		# subspecies strain species genus family order class phylum superkingdom 'no rank'
 # -v (--verbose)	Adds verbosity
 
+print("\nAcquiring TaxIDs for BLAST hits\n");
 system("$ID16S_dir/Core_scripts/taxid_dist.pl \\
 		  --blast $outdir/BLAST/*.$task \\
 		  --nodes $db/TaxDump/nodes.dmp \\
@@ -218,15 +223,15 @@ system("$ID16S_dir/Core_scripts/taxid_dist.pl \\
 # -n (--names)	NCBI's names.dmp file
 # -o (--output)	Output filename [Default = Normalized_Microbiome_Composition.tsv]
 
-open(NNORM,$nonnormal_dir);
+opendir(NNORM,$nonnormal_dir) or die("Unable to open $nonnormal_dir: $!\n");
 
-while (my $file = readdir(NNORM)){
+foreach my $file (readdir(NNORM)){
 	unless(-d $file){
 		system("$ID16S_dir/Normalization_scripts/get_organism_statistics.pl \\
 				  --sample $nonnormal_dir/$file \\
 				  --db $db/Normalization_DB \\
 				  --name $db/TaxDump/names.dmp \\
-				  --output $normal_dir/$file.normalized;
+				  --output $normal_dir;
 		");
 	}
 }
