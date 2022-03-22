@@ -2,7 +2,8 @@
 * [Introduction](#Introduction)
 * [Dependencies](#Dependencies)
 * [Installation](#Installation)
-* [Key steps](#Key-steps)
+* [Running ID16S](#Running-ID16S-via-run_ID16S.pl)
+* [Step by Step](#RunningID16S-step--wise)
 * [Example](#Example)
 * [References](#References)
 
@@ -21,7 +22,7 @@ Note that for large datasets, BLAST homology searches will take a while to compl
 - [guppy](https://nanoporetech.com/) (for FAST5 basecalling)
 
 ## Getting started
-<b>Installing ID16S<b>
+<b>Installing ID16S</b>
 
 The ID16S pipeline can be downloaded with Git:
 ```Bash
@@ -38,7 +39,7 @@ ID16S/setup_ID16S.pl \
 source $CONFIG_FILE
 ```
 
-<b>Downloading databases<b>
+<b>Downloading databases</b>
 
 A total of 3 NCBI datasets are required for the ID16S pipeline:
 1. The NCBI 16S Microbial database - [16S_ribosomal_RNA.tar.gz](https://ftp.ncbi.nlm.nih.gov/blast/db/16S_ribosomal_RNA.tar.gz)
@@ -52,12 +53,101 @@ The required databases can be downloaded as follows:
 ID16S/download_ID16S_dbs.pl -d
 ```
 
-If an updated 16S rRNA database is desired, the addition of the ```Bash -c (--create)``` flag can be used:
+If an updated 16S rRNA database is desired, the addition of the `-c (--create)` flag can be used:
 ```Bash
 ID16S/download_ID16S_dbs.pl -d -c
 ```
 
-## Key steps
+## Running ID16S via run_ID16S.pl
+
+Finally, to run ID16S, provide the <i>run_ID16S.pl(https://github.com/PombertLab/ID16S/blob/master/run_ID16S.pl)</i> with the desired FASTA/Q files (multi-FASTA/Q files are supported):
+```Bash
+ID16S/run_ID16S.pl \
+  -fa /path/to/FASTA/files
+  -fq /path/to/FASTQ/files
+```
+
+run_ID16S.pl has a number of advanced parameters:
+```
+-o (--outdir)	Output directory [Default = \$ID16S_HOME]
+-d (--db)	Path to 16IDS_DB download [Default = \$ID16S_DB]
+-co (--concat)		Concatenate all results into a single file [Default: off]
+-t (--threads)		CPUs to use [default = 10]
+-cu (--culling)		Culling limit [default = 10]
+-k (--tasks)		megablast, dc-megablast, blastn [default = megablast]
+-pe (--p_evalue)	Preliminary e-value cutoff for BLAST results [Default = 1e-05]
+-h (--hits)		Number of hits to return [Default = 1]
+-fe (--f_evalue)	Final e-value cutoff for BLAST results [Default = 1e-75]
+-r (--ranks)		Output files by taxonomic ranks [Default: species genus family order class]
+```
+
+The non-normalized results can be found in the <i>NonNormalized</i> directory, and will look similar to:
+```Bash
+==> EXAMPLE/NonNormalized/sample_1.fasta.megablast.class <==
+class	TaxID	Number	Percent (total = 848)
+Mollicutes	31969	848	100.00%
+
+==> EXAMPLE/NonNormalized/sample_1.fasta.megablast.family <==
+family	TaxID	Number	Percent (total = 848)
+Mycoplasmataceae	2092	848	100.00%
+
+==> EXAMPLE/NonNormalized/sample_1.fasta.megablast.genus <==
+genus	TaxID	Number	Percent (total = 848)
+Mycoplasmopsis	2767358	838	98.82%
+Mycoplasma	2093	10	1.18%
+
+==> EXAMPLE/NonNormalized/sample_1.fasta.megablast.order <==
+order	TaxID	Number	Percent (total = 848)
+Mycoplasmatales	2085	848	100.00%
+
+==> EXAMPLE/NonNormalized/sample_1.fasta.megablast.species <==
+species	TaxID	Number	Percent (total = 848)
+Mycoplasmopsis fermentans	2115	677	79.83%
+Mycoplasmopsis arginini	2094	134	15.80%
+Mycoplasmopsis caviae	55603	22	2.59%
+Mycoplasma canadense	29554	4	0.47%
+Mycoplasmopsis hyopharyngis	29558	2	0.24%
+Mycoplasma gateae	35769	2	0.24%
+Mycoplasma neophronis	872983	1	0.12%
+Mycoplasmopsis adleri	51362	1	0.12%
+Mycoplasma auris	51363	1	0.12%
+```
+
+The normalized results can be found in the <i>Normalized</i> directory, and will look similar to:
+```Bash
+==> EXAMPLE/Normalized/sample_1_fasta_megablast_class_Normalized_Microbiome_Composition.tsv <==
+###Organism Name	TaxID	Taxo Level	Non-normalized % of sample	Normalized % of sample	Delta
+Mollicutes	31969	class	100.00	100.00	0.00
+
+==> EXAMPLE/Normalized/sample_1_fasta_megablast_family_Normalized_Microbiome_Composition.tsv <==
+###Organism Name	TaxID	Taxo Level	Non-normalized % of sample	Normalized % of sample	Delta
+Mycoplasmataceae	2092	family	100.00	100.00	0.00
+
+==> EXAMPLE/Normalized/sample_1_fasta_megablast_genus_Normalized_Microbiome_Composition.tsv <==
+###Organism Name	TaxID	Taxo Level	Non-normalized % of sample	Normalized % of sample	Delta
+Mycoplasmopsis	2767358	genus	98.82	98.82	0.00
+Mycoplasma	2093	genus	1.18	1.18	0.00
+
+==> EXAMPLE/Normalized/sample_1_fasta_megablast_order_Normalized_Microbiome_Composition.tsv <==
+###Organism Name	TaxID	Taxo Level	Non-normalized % of sample	Normalized % of sample	Delta
+Mycoplasmatales	2085	order	100.00	100.00	0.00
+
+==> EXAMPLE/Normalized/sample_1_fasta_megablast_species_Normalized_Microbiome_Composition.tsv <==
+###Organism Name	TaxID	Taxo Level	Non-normalized % of sample	Normalized % of sample	Delta
+Mycoplasmopsis fermentans	2115	species	79.83	88.79	8.96
+Mycoplasmopsis arginini	2094	genus	15.80	8.79	-7.01
+Mycoplasmopsis caviae	55603	genus	2.59	1.44	-1.15
+Mycoplasma canadense	29554	genus	0.47	0.26	-0.21
+Mycoplasma gateae	35769	genus	0.24	0.13	-0.11
+Mycoplasmopsis hyopharyngis	29558	genus	0.24	0.13	-0.11
+Mycoplasma neophronis	872983	genus	0.12	0.07	-0.05
+Mycoplasmopsis mucosicanis	458208	genus	0.12	0.07	-0.05
+Mycoplasma auris	51363	genus	0.12	0.07	-0.05
+```
+
+## Running ID16S step-wise
+
+<b>Key steps</b>
 The ID16S pipeline consists of a few simple steps:
 1. Optional - Basecall Nanopore FAST5 files with [guppy](https://nanoporetech.com/)
 2. Convert FASTQ files to FASTA format with [fastq2fasta.pl](https://github.com/PombertLab/ID16S/blob/master/fastq2fasta.pl)
