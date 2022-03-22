@@ -8,6 +8,7 @@ use warnings;
 use strict;
 use Getopt::Long qw(GetOptions);
 use File::Path qw(make_path);
+use File::Basename;
 
 my $usage = << "EXIT";
 NAME		${name}
@@ -216,9 +217,12 @@ close NAMES;
 ## Print out results
 #######################################################################################################################
 
-open RESULTS, ">", "$outdir/Normalized_Microbiome_Composition.tsv" or die "Unable to open $outdir/Normalized_Microbiome_Composition.tsv: $!\n";
+my ($file_handle,undef) = fileparse($sample);
+$file_handle =~ s/\./\_/g;
+
+open RESULTS, ">", "$outdir/${file_handle}_Normalized_Microbiome_Composition.tsv" or die "Unable to open $outdir/${file_handle}_Normalized_Microbiome_Composition.tsv: $!\n";
 print RESULTS ("###Organism Name\tTaxID\tTaxo Level\tNon-normalized % of sample\tNormalized % of sample\tDelta\n");
-open LOG, ">", "$outdir/Normalized_Microbiome_Count.log";
+open LOG, ">", "$outdir/${file_handle}_Normalized_Microbiome_Count.log" or die "Unable to open $outdir/${file_handle}_Normalized_Microbiome_Count.log: $!\n";
 print LOG ("###Organism Name\tTaxID\tGene count\trRNA counts\n");
 
 foreach my $taxid (sort({$normalized{$b}[5] <=> $normalized{$a}[5]}(keys(%normalized)))){
