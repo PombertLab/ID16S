@@ -60,7 +60,7 @@ ID16S/download_ID16S_dbs.pl -d -c
 
 ## Running ID16S via run_ID16S.pl
 
-To run ID16S, provide the run_ID16S.pl(https://github.com/PombertLab/ID16S/blob/master/run_ID16S.pl) with the desired FASTA/Q files (multi-FASTA/Q files are supported):
+To run ID16S, provide the [run_ID16S.pl](https://github.com/PombertLab/ID16S/blob/master/run_ID16S.pl) with the desired FASTA/Q files (multi-FASTA/Q files are supported):
 ```Bash
 ID16S/run_ID16S.pl \
   -fa /path/to/FASTA/files
@@ -81,7 +81,7 @@ run_ID16S.pl has a number of advanced parameters:
 -r (--ranks)		Output files by taxonomic ranks [Default: species genus family order class]
 ```
 
-The non-normalized results can be found in the <i>NonNormalized</i> directory, and will look similar to:
+The non-normalized results can be found in the <b>NonNormalized</b> directory, and will look similar to:
 ```Bash
 ==> EXAMPLE/NonNormalized/sample_1.fasta.megablast.class <==
 class	TaxID	Number	Percent (total = 848)
