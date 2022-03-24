@@ -1,15 +1,14 @@
 #!/usr/bin/perl
 ## Pombert Lab 2022
 my $name = "run_ID16S.pl";
-my $version = "0.2";
-my $updated = "2022-03-22";
+my $version = "0.2a";
+my $updated = "2022-03-24";
 
 use strict;
 use warnings;
 use Getopt::Long qw(GetOptions);
 use File::Basename;
 use File::Path qw(make_path);
-
 
 my $usage = <<"EXIT";
 NAME		${name}
@@ -18,52 +17,77 @@ UPDATED		${updated}
 SYNOPSIS	
 
 USAGE		${name} \\
+		  -fq *.fastq.gz \\
+		  -headcrop 50
 
 OPTIONS
 -fa (--fasta)	FASTA files to run
 -fq (--fastq)	FASTQ files to convert then run
+-hd (--headcrop)	Remove the first X nucleotides from 5' end of FASTQ sequences ## Useful for Nanopore data
 
-ADVANCED
+ADVANCED OPTIONS
+# ID16S SETTINGS
 -o (--outdir)	Output directory [Default = \$ID16S_HOME]
 -d (--db)	Path to 16IDS_DB download [Default = \$ID16S_DB]
--co (--concat)		Concatenate all results into a single file [Default: off]
+
+# BLAST OPTIONS
+-k (--tasks)		megablast, dc-megablast, blastn [default = megablast]
 -t (--threads)		CPUs to use [default = 10]
 -cu (--culling)		Culling limit [default = 10]
--k (--tasks)		megablast, dc-megablast, blastn [default = megablast]
--pe (--p_evalue)	Preliminary e-value cutoff for BLAST results [Default = 1e-05]
 -h (--hits)		Number of hits to return [Default = 1]
--fe (--f_evalue)	Final e-value cutoff for BLAST results [Default = 1e-75]
+-pe (--p_evalue)	Preliminary e-value cutoff for BLAST results [Default = 1e-05]
+
+# OUTPUT OPTIONS
 -r (--ranks)		Output files by taxonomic ranks [Default: species genus family order class]
+-fe (--f_evalue)	Final e-value cutoff for BLAST results [Default = 1e-75]
+-co (--concat)		Concatenate all results into a single file [Default: off]
 EXIT
 
 die("\n$usage\n") unless(@ARGV);
 
+###################################################################################################
+## Command line options
+###################################################################################################
+
+## GENERAL
 my @fastq;
 my @fasta;
-my $concat;
+my $headcrop;
+
+## ID16S SETTINGS
 my $outdir;
 my $db;
+
+## BLAST
+my $task = "megablast";
 my $threads = 10;
 my $culling = 10;
-my $task = "megablast";
-my $p_evalue = "1e-05";
 my $hits = 1;
-my $f_evalue = "1e-75";
+my $p_evalue = "1e-05";
+
+## OUTPUT
 my @ranks = ("species","genus","family","order","class");
+my $f_evalue = "1e-75";
+my $concat;
 
 GetOptions(
-	'fq|fastq=s{0,}' => \@fastq,
-	'fa|fasta=s{0,}' => \@fasta,
-	'co|concat=s' => \$concat,
+	# GENERAL
+	'fq|fastq=s@{0,}' => \@fastq,
+	'fa|fasta=s@{0,}' => \@fasta,
+	'hd|headcrop=i' => \$headcrop,
+	# ID16S SETTINGS
 	'o|outdir=s' => \$outdir,
 	'd|db=s' => \$db,
-	'cu|culling=s' => \$culling,
-	't|threads=s' => \$threads,
-	'pe|p_evalue=s' => \$p_evalue,
-	'h|hits=s' => \$hits,
-	'fe|f_evalue=s' => \$f_evalue,
+	# BLAST
 	'k|tasks=s' => \$task,
-	'r|ranks=s{0,}' => \@ranks,
+	't|threads=s' => \$threads,
+	'cu|culling=s' => \$culling,
+	'h|hits=s' => \$hits,
+	'pe|p_evalue=s' => \$p_evalue,
+	# OUTPUT
+	'r|ranks=s@{0,}' => \@ranks,
+	'fe|f_evalue=s' => \$f_evalue,
+	'co|concat=s' => \$concat,
 );
 
 my $fasta_dir = "$outdir/FASTA";
@@ -110,10 +134,12 @@ foreach my $dirs (@output_directories){
 # COMMAND	fastq2fasta.pl \\
 # 			  -f *.fastq \\
 # 			  -o FASTA \\
+# 			  -h 50 \\
 # 			  -v
 
 # -f (--fastq)	FASTQ files to convert
 # -o (--outdir)	Output directory [Default: ./]
+# -h (--headcrop)	Remove the first X nucleotides from 5' ## Useful for nanopore data
 # -v (--verbose)	Adds verbosity
 
 if(@fasta){
@@ -124,9 +150,16 @@ if(@fasta){
 
 if(@fastq){
 	print("\nConverting FASTQ to FASTA with fastq2fasta.pl\n");
+
+	my $crop_5end = '';
+	if ($headcrop){
+		$crop_5end = "--headcrop $headcrop";
+	}
+
 	system("$ID16S_dir/Core_scripts/fastq2fasta.pl \\
 			  --fastq @fastq \\
-			  --outdir $fasta_dir
+			  --outdir $fasta_dir \\
+			  $headcrop
 	");
 }
 else{
