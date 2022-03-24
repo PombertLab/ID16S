@@ -75,7 +75,7 @@ GENERAL OPTIONS
 -fq (--fastq)		FASTQ files to convert then run
 -hd (--headcrop)	Remove the first X nucleotides from 5' end of FASTQ sequences
 			## Useful for Nanopore data
--m (--min_length)		Minimum read length to keep from FASTQ files [Default: 1000]
+-m (--min_length)	Minimum read length to keep from FASTQ files [Default: 1000]
 
 ADVANCED OPTIONS
 # ID16S SETTINGS
