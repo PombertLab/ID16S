@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ## Pombert Lab, 2018
 my $name = 'fastq2fasta.pl';
-my $version = '0.3a';
+my $version = '0.3b';
 my $updated = '2022-03-24';
 
 use strict;
@@ -21,12 +21,14 @@ COMMAND		${name} \\
 		  -f *.fastq \\
 		  -o FASTA \\
 		  -h 50 \\
+		  -m 1000 \\
 		  -v
 
 OPTIONS:
 -f (--fastq)	FASTQ files to convert
 -o (--outdir)	Output directory [Default: ./]
 -h (--headcrop)	Remove the first X nucleotides from 5' ## Useful for nanopore data
+-m (--min_length)	Minimum length (in nt) of reads to keep [Default: 1000]
 -v (--verbose)	Adds verbosity
 OPTIONS
 die "\n$usage\n" unless @ARGV;
@@ -34,11 +36,13 @@ die "\n$usage\n" unless @ARGV;
 my @fq;
 my $outdir = './';
 my $headcrop;
+my $min_length = 1000;
 my $verbose;
 GetOptions(
 	'f|fastq=s@{1,}' => \@fq,
 	'o|outdir=s' => \$outdir,
 	'h|headcrop=i' => \$headcrop,
+	'm|min_length=i' => \$min_length,
 	'v|verbose' => \$verbose
 );
 
@@ -79,6 +83,7 @@ while (my $fastq = shift@fq){
 			$read_name = $line;
 			$read_number++;
 		}
+
 		## Line 2 = Read sequence
 		elsif ($line_counter == 2){
 
@@ -87,21 +92,25 @@ while (my $fastq = shift@fq){
 
 			## Adding leading zeroes to help sort array
 			my $padded_length = sprintf("%09d", $read_length);
-			push (@lengths, $padded_length);
 
 			## Remove first X nucleotides if headcrop; useful for Nanopore data
 			if ($headcrop){
-				$sequence = substr($sequence, $headcrop, $read_length);
+				if (($read_length - $headcrop) >= (0 + $min_length)){
+
+					$sequence = substr($sequence, $headcrop, $read_length);
+					my $cropped_length = $read_length - $headcrop;
+					$padded_length = sprintf("%09d", $cropped_length);
+
+					push (@lengths, $padded_length);
+					fasta(\*FASTA, $read_name, $sequence);
+
+				}
 			}
-
-			## Keeping only 1st part of sequence names before whitespaces
-			my ($seqname) = $read_name =~ /^@(\S+)/;
-			print FASTA ">$seqname\n";
-
-			## Printing sequence
-			my @fasta = unpack ("(A60)*", $sequence);
-			while (my $seq = shift@fasta){
-				print FASTA "$seq\n";
+			else {
+				if ($read_length >= (0 + $min_length)){
+					push (@lengths, $padded_length);
+					fasta(\*FASTA, $read_name, $sequence);
+				}
 			}
 
 		}
@@ -126,6 +135,23 @@ while (my $fastq = shift@fq){
 }
 
 ### subroutines
+sub fasta {
+
+	my $fh = $_[0];
+	my $readname = $_[1];
+	my $sequence = $_[2];
+
+	## Keeping only 1st part of sequence names before whitespaces
+	my ($seqname) = $readname =~ /^@(\S+)/;
+	print $fh ">$seqname\n";
+
+	## Printing sequence
+	my @fasta = unpack ("(A60)*", $sequence);
+	while (my $seq = shift@fasta){
+		print $fh "$seq\n";
+	}
+}
+
 sub n50{
 	my @fh = (*STDOUT);
 	my $file = shift @_;
@@ -135,7 +161,7 @@ sub n50{
 
 	my $nreads = commify($num_reads);
 	foreach (@fh){
-		print $_ "\n## Metrics for dataset $file\n\n";
+		print $_ "\n## Metrics for dataset $file (includes min length and headcrop if requested)\n\n";
 		print $_ "Number of reads: $nreads\n";
 	}
 

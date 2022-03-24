@@ -24,6 +24,7 @@ GENERAL OPTIONS
 -fa (--fasta)		FASTA files to run
 -fq (--fastq)		FASTQ files to convert then run
 -hd (--headcrop)	Remove the first X nucleotides from 5' end of FASTQ sequences ## Useful for Nanopore data
+-m (--min_length)		Minimum read length to keep from FASTQ files [Default: 1000]
 
 ADVANCED OPTIONS
 # ID16S SETTINGS
@@ -53,6 +54,7 @@ die("\n$usage\n") unless(@ARGV);
 my @fastq;
 my @fasta;
 my $headcrop;
+my $min_length = 1000;
 
 ## ID16S SETTINGS
 my $outdir;
@@ -75,6 +77,7 @@ GetOptions(
 	'fq|fastq=s@{0,}' => \@fastq,
 	'fa|fasta=s@{0,}' => \@fasta,
 	'hd|headcrop=i' => \$headcrop,
+	'm|min_length=i' => \$min_length,
 	# ID16S SETTINGS
 	'o|outdir=s' => \$outdir,
 	'd|db=s' => \$db,
@@ -159,6 +162,7 @@ if(@fastq){
 	system("$ID16S_dir/Core_scripts/fastq2fasta.pl \\
 			  --fastq @fastq \\
 			  --outdir $fasta_dir \\
+			  --min_length $min_length \\
 			  $headcrop
 	");
 }

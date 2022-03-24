@@ -73,7 +73,9 @@ Options for run_ID16S.pl are:
 GENERAL OPTIONS
 -fa (--fasta)		FASTA files to run
 -fq (--fastq)		FASTQ files to convert then run
--hd (--headcrop)	Remove the first X nucleotides from 5' end of FASTQ sequences ## Useful for Nanopore data
+-hd (--headcrop)	Remove the first X nucleotides from 5' end of FASTQ sequences
+			## Useful for Nanopore data
+-m (--min_length)		Minimum read length to keep from FASTQ files [Default: 1000]
 
 ADVANCED OPTIONS
 # ID16S SETTINGS
@@ -172,6 +174,7 @@ We can use the FASTQ files located in the Example/ folder to test the installati
 fastq2fasta.pl \
    -f Example/*.fastq.gz \
    -h 50 \
+   -m 1000 \
    -o FASTA \
    -v
 ```
@@ -181,6 +184,7 @@ Options for [fastq2fasta.pl](https://github.com/PombertLab/ID16S/blob/master/fas
 -f (--fastq)	FASTQ files to convert
 -o (--outdir)	Output directory [Default: ./]
 -h (--headcrop)	Remove the first X nucleotides from 5' ## Useful for nanopore data
+-m (--min_length)	Minimum length (in nt) of reads to keep [Default: 1000]
 -v (--verbose)	Adds verbosity
 ```
 
