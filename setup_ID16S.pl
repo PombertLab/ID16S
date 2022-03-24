@@ -14,11 +14,12 @@ my $usage = <<"EXIT";
 NAME		${name}
 VERSION		${version}
 UPDATED		${updated}
-SYNOPSIS	The purpose of this script is to add ID16S enviroment variables
-		to a configuration file.
+SYNOPSIS	Creates and stores ID16S environment variables to a configuration file.
 
 USAGE		${name} \\
-
+		  -c ID16S.sh \\
+		  -d ./ID16S_DB \\
+		  -w ./ID16S_WD
 
 OPTIONS
 -c (--config)	Configuration file [Default: ~/.bashrc]

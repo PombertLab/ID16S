@@ -14,7 +14,7 @@ my $usage = <<"EXIT";
 NAME		${name}
 VERSION		${version}
 UPDATED		${updated}
-SYNOPSIS	This script downloads the required databases from NCBI, with the option of creating a 
+SYNOPSIS	Downloads the required databases from NCBI, with the option of creating a 
 		new normalization database.
 
 USAGE		${name} \\
@@ -39,17 +39,17 @@ GetOptions(
 	'o|outdir=s' => \$outdir,
 );
 
-unless($download){
-	die("\n$usage\n");
+unless ($download){
+	die ("\n$usage\n");
 }
 
 my ($download_script,$ID16S_dir) = fileparse($0);
 
-unless($outdir){
-	if($ENV{"ID16S_DB"}){
+unless ($outdir){
+	if ($ENV{"ID16S_DB"}){
 		$outdir = $ENV{"ID16S_DB"};
 	}
-	else{
+	else {
 		print STDERR ("\$ID16S_DB is not set as an enviroment variable and -o (--outdir) was not provided.\n");
 		print("To use $name, please add \$ID16S_DB to the enviroment or specify path with -o (--outdir)\n");
 		exit;
@@ -65,8 +65,8 @@ my $normal_dir = "$outdir/Normalization_DB";
 my @dirs = ($NCBI_16S_dir,$TaxDB_dir,$TaxDump_dir,$genomes_dir,$normal_dir);
 
 foreach my $dir (@dirs){
-	unless(-d $dir){
-		make_path($dir,{mode => 0755}) or die("Unable to create directory $dir: $!\n");
+	unless (-d $dir){
+		make_path($dir,{mode => 0755}) or die ("Unable to create directory $dir: $!\n");
 	}
 }
 
@@ -97,22 +97,22 @@ system "rm $TaxDump_dir/taxdump.tar.gz";
 ## Downloading 'Bacteria' GBFF species
 ###################################################################################################
 CHECK:
-if(defined $make){
-	while(0==0){
+if (defined $make){
+	while (0==0){
 		ASK:
-		print("\nRecreation of normalization database will require a download of ");
-		print(".gbff files of all 'Bacteria' in NCBI. This is a sizeable download ");
-		print("(~250Gb decompressed) and may take a while to download. ");
-		print("Are you sure you would like to download? (y/n)\n\tSelection: ");
-		chomp(my $response = lc(<STDIN>));
-		if($response eq "y"){
+		print ("\nRecreation of normalization database will require a download of ");
+		print (".gbff files of all 'Bacteria' in NCBI. This is a sizeable download ");
+		print ("(~250Gb decompressed) and may take a while to download. ");
+		print ("Are you sure you would like to download? (y/n)\n\tSelection: ");
+		chomp (my $response = lc(<STDIN>));
+		if ($response eq "y"){
 			goto VERIFIED;
 		}
-		elsif($response eq "n"){
+		elsif ($response eq "n"){
 			undef $make;
 			goto CHECK;
 		}
-		else{
+		else {
 			print("$response is an invalid selection.\n");
 			goto ASK;
 		}
@@ -123,7 +123,7 @@ if(defined $make){
 	system "curl https://ftp.ncbi.nlm.nih.gov/pub/datasets/command-line/LATEST/linux-amd64/datasets -o $genomes_dir/datasets";
 	system "chmod +x $outdir/datasets";
 
-	unless(-d "$genomes_dir/ncbi_datasets.zip"){
+	unless (-d "$genomes_dir/ncbi_datasets.zip"){
 		system "$outdir/datasets \\
 				  download \\
 				  genome \\
@@ -143,7 +143,7 @@ if(defined $make){
 
 	system "unzip $genomes_dir/ncbi_dataset.zip";
 	
-	opendir(GENOMES,"$genomes_dir/ncbi_dataset/data") or die("Unable to open directory $genomes_dir/ncbi_dataset/data: $!");
+	opendir (GENOMES,"$genomes_dir/ncbi_dataset/data") or die("Unable to open directory $genomes_dir/ncbi_dataset/data: $!");
 	while (my $dir = readdir(GENOMES)){
 		print ("$dir\n");
 		# if($dir =~ //)
@@ -151,7 +151,7 @@ if(defined $make){
 		# print "gzip $genomes_dir/$1.gbff\n";
 	}
 	# system "rm -r $genomes_dir/ncbi_dataset";
-	closedir(GENOMES);
+	closedir (GENOMES);
 }
 else{
 	system "cp $ID16S_dir/Normalization_scripts/Prebuilt_Normalization_DB/*.* $normal_dir/";
