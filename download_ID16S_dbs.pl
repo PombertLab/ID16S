@@ -27,7 +27,7 @@ OPTIONS
 -o (--outdir)	Output directory [Default = \$ID16S_DB]
 EXIT
 
-die ("\n$usage\n") unless(@ARGV);
+die ("\n$usage\n") unless (@ARGV);
 
 my $download;
 my $make;
@@ -113,7 +113,7 @@ if (defined $make){
 			goto CHECK;
 		}
 		else {
-			print("$response is an invalid selection.\n");
+			print ("$response is an invalid selection.\n");
 			goto ASK;
 		}
 		
@@ -143,7 +143,7 @@ if (defined $make){
 
 	system "unzip $genomes_dir/ncbi_dataset.zip";
 	
-	opendir (GENOMES,"$genomes_dir/ncbi_dataset/data") or die("Unable to open directory $genomes_dir/ncbi_dataset/data: $!");
+	opendir (GENOMES,"$genomes_dir/ncbi_dataset/data") or die ("Unable to open directory $genomes_dir/ncbi_dataset/data: $!");
 	while (my $dir = readdir(GENOMES)){
 		print ("$dir\n");
 		# if($dir =~ //)
