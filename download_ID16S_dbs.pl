@@ -27,7 +27,7 @@ OPTIONS
 -o (--outdir)	Output directory [Default = \$ID16S_DB]
 EXIT
 
-die("\n$usage\n") unless(@ARGV);
+die ("\n$usage\n") unless(@ARGV);
 
 my $download;
 my $make;
