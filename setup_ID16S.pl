@@ -27,7 +27,7 @@ OPTIONS
 -w (--work_dir)	Desired working directory for ID16S
 EXIT
 
-die("\n$usage\n") unless(@ARGV);
+die ("\n$usage\n") unless (@ARGV);
 
 my $path = './ID16S';
 my $db_path = './ID16S_DB';
@@ -39,11 +39,11 @@ GetOptions(
 	'c|config=s' => \$config_file,
 );
 
-unless(-d $path){
+unless (-d $path){
 	make_path($path,{mode=>0755}) or die("Unable to create database directory $path: $!\n");
 }
 
-unless(-d $db_path){
+unless (-d $db_path){
 	make_path($db_path,{mode=>0755}) or die("Unable to create database directory $path: $!\n");
 }
 
