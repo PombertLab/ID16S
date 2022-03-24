@@ -200,9 +200,9 @@ megablast.pl \
 
 Options for [megablast.pl](https://github.com/PombertLab/ID16S/blob/master/megablast.pl) are:
 ```
--k (--task)		megablast, dc-megablast, blastn [default = megablast]
+-k (--task)	megablast, dc-megablast, blastn [default = megablast]
 -q (--query)	fasta file(s) to be queried
--d (--db)		NCBI nucleotide database to query [default = 16S_ribosomal_RNA]
+-d (--db)	NCBI nucleotide database to query [default = 16S_ribosomal_RNA]
 -e (--evalue)	1e-05, 1e-10 or other [default = 1e-05]
 -c (--culling)	culling limit [default = 10]
 -t (--threads)	CPUs to use [default = 10]
@@ -233,11 +233,11 @@ Options for [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxi
 -a (--names)	NCBI names.dmp
 -b (--blast)	NCBI blast output file(s) in outfmt 6 format
 -e (--evalue)	evalue cutoff [Default: 1e-75]
--h (--hits)		Number of BLAST hits to keep; top N hits [Default: 1]
+-h (--hits)	Number of BLAST hits to keep; top N hits [Default: 1]
 -o (--outdir)	Output directory [Default: ./]
 -r (--ranks)	Output files by taxonomic ranks [Default: species genus family order class]
-				# Possible taxonomic rank options are:
-				# subspecies strain species genus family order class phylum superkingdom 'no rank'
+		# Possible taxonomic rank options are:
+		# subspecies strain species genus family order class phylum superkingdom 'no rank'
 -v (--verbose)	Adds verbosity
 ```
 

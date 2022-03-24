@@ -30,9 +30,9 @@ USAGE		${name} \\
 		  -v
 
 OPTIONS:
--k (--task)		megablast, dc-megablast, blastn [default = megablast]
+-k (--task)	megablast, dc-megablast, blastn [default = megablast]
 -q (--query)	fasta file(s) to be queried
--d (--db)		NCBI nucleotide database to query [default = 16S_ribosomal_RNA]
+-d (--db)	NCBI nucleotide database to query [default = 16S_ribosomal_RNA]
 -e (--evalue)	1e-05, 1e-10 or other [default = 1e-05]
 -c (--culling)	culling limit [default = 10]
 -t (--threads)	CPUs to use [default = 10]
