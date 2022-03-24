@@ -8,7 +8,7 @@
 * [References](#References)
 
 ## Introduction
-The ID16S pipeline reconstructs the composition of bacterial species from a multifasta file of 16S amplicon sequences. Inferences are derived from [BLAST](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) homology searches against the NCBI 16S Microbial database. Normalization based on rRNA copy is performed by utilizing a database produced from all completely assembled bacterial genome annotations within RefSeq[](). For a good overview of rRNA copy variation, please see this excellent [review](https://doi.org/10.1016/j.tim.2020.05.019) by Lavrinienko *et al.*
+The ID16S pipeline reconstructs the composition of bacterial species from a multifasta file of 16S amplicon sequences. Inferences are derived from [BLAST](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) homology searches against the NCBI 16S Microbial database. Normalization based on rRNA copy variation is performed by utilizing a database produced from all completely assembled bacterial genome annotations within [RefSeq](https://www.ncbi.nlm.nih.gov/refseq/). For a good overview of rRNA copy variation, please see this excellent [review](https://doi.org/10.1016/j.tim.2020.05.019) by Lavrinienko *et al.*
 
 The ID16S pipeline was tested on Nanopore 1D reads obtained with the 16S Barcoding Kit (SQK-RAB204). Identification accuracy parallels that of the Nanopore sequencing reads. This pipeline should work on all 16S datasets but full length 16S amplicons are preferable.
 
@@ -18,9 +18,6 @@ Note that for large datasets, BLAST homology searches will take a while to compl
 - [Perl 5](https://www.perl.org/)
 - [Python 3](https://www.python.org/)
 - [BLAST+](https://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastDocs&DOC_TYPE=Download)
-
-#### Optional
-- [guppy](https://nanoporetech.com/) (for FAST5 basecalling)
 
 ## Getting started
 <b>Installing ID16S</b>
@@ -163,10 +160,9 @@ Mycoplasma auris	51363	genus	0.12	0.07	-0.05
 
 <b>Key steps</b>
 The ID16S pipeline consists of a few simple steps:
-1. Optional - Basecall Nanopore FAST5 files with [guppy](https://nanoporetech.com/)
-2. Convert FASTQ files to FASTA format with [fastq2fasta.pl](https://github.com/PombertLab/ID16S/blob/master/fastq2fasta.pl)
-3. Perform homology searches against the Microbial 16S database with [megablast.pl](https://github.com/PombertLab/ID16S/blob/master/megablast.pl)
-4. Summarize the taxonomic composition of the datasets with [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxid_dist.pl)
+1. Convert FASTQ files to FASTA format with [fastq2fasta.pl](https://github.com/PombertLab/ID16S/blob/master/fastq2fasta.pl)
+2. Perform homology searches against the Microbial 16S database with [megablast.pl](https://github.com/PombertLab/ID16S/blob/master/megablast.pl)
+3. Summarize the taxonomic composition of the datasets with [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxid_dist.pl)
 
 ## Example
 We can use the FASTQ files located in the Example/ folder to test the installation of the pipeline. To convert the FASTQ files to FASTA format with [fastq2fasta.pl](https://github.com/PombertLab/ID16S/blob/master/fastq2fasta.pl), simply type:
