@@ -20,21 +20,21 @@ USAGE		${name} \\
 		  -fq *.fastq.gz \\
 		  -headcrop 50
 
-OPTIONS
--fa (--fasta)	FASTA files to run
--fq (--fastq)	FASTQ files to convert then run
+GENERAL OPTIONS
+-fa (--fasta)		FASTA files to run
+-fq (--fastq)		FASTQ files to convert then run
 -hd (--headcrop)	Remove the first X nucleotides from 5' end of FASTQ sequences ## Useful for Nanopore data
 
 ADVANCED OPTIONS
 # ID16S SETTINGS
--o (--outdir)	Output directory [Default = \$ID16S_HOME]
--d (--db)	Path to 16IDS_DB download [Default = \$ID16S_DB]
+-o (--outdir)		Output directory [Default = \$ID16S_HOME]
+-d (--db)			Path to 16IDS_DB download [Default = \$ID16S_DB]
 
 # BLAST OPTIONS
 -k (--tasks)		megablast, dc-megablast, blastn [default = megablast]
 -t (--threads)		CPUs to use [default = 10]
 -cu (--culling)		Culling limit [default = 10]
--h (--hits)		Number of hits to return [Default = 1]
+-h (--hits)			Number of hits to return [Default = 1]
 -pe (--p_evalue)	Preliminary e-value cutoff for BLAST results [Default = 1e-05]
 
 # OUTPUT OPTIONS

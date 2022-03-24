@@ -2,7 +2,7 @@
 * [Introduction](#Introduction)
 * [Dependencies](#Dependencies)
 * [Installation](#Installation)
-* [Running ID16S](#Running-ID16S-via-run_ID16S)
+* [Running ID16S](#Running-ID16S-via-run_ID16S.pl)
 * [Step by Step](#Running-ID16S-step-wise)
 * [Example](#Example)
 * [References](#References)
@@ -29,7 +29,7 @@ The ID16S pipeline can be downloaded with Git:
 git clone --recursive https://github.com/PombertLab/ID16S.git
 ```
 
-To run the ID16S pipeline, the enviroment needs to be setup:
+To run the ID16S pipeline, its environment variables must be setup:
 ```Bash
 ID16S/setup_ID16S.pl \
   -w /desired/output/path \
@@ -58,7 +58,7 @@ If an updated 16S rRNA database is desired, the addition of the `-c (--create)` 
 ID16S/download_ID16S_dbs.pl -d -c
 ```
 
-## Running ID16S via run_ID16S
+## Running ID16S via run_ID16S.pl
 
 To run ID16S, provide [run_ID16S.pl](https://github.com/PombertLab/ID16S/blob/master/run_ID16S.pl) with the desired FASTA/Q files:
 ```Bash
@@ -67,18 +67,29 @@ ID16S/run_ID16S.pl \
   -fq /path/to/FASTQ/files
 ```
 
-run_ID16S.pl has a number of advanced parameters:
+Options for run_ID16S.pl are:
 ```
+GENERAL OPTIONS
+-fa (--fasta)		FASTA files to run
+-fq (--fastq)		FASTQ files to convert then run
+-hd (--headcrop)	Remove the first X nucleotides from 5' end of FASTQ sequences ## Useful for Nanopore data
+
+ADVANCED OPTIONS
+# ID16S SETTINGS
 -o (--outdir)		Output directory [Default = \$ID16S_HOME]
--d (--db)		Path to 16IDS_DB download [Default = \$ID16S_DB]
--co (--concat)		Concatenate all results into a single file [Default: off]
+-d (--db)			Path to 16IDS_DB download [Default = \$ID16S_DB]
+
+# BLAST OPTIONS
+-k (--tasks)		megablast, dc-megablast, blastn [default = megablast]
 -t (--threads)		CPUs to use [default = 10]
 -cu (--culling)		Culling limit [default = 10]
--k (--tasks)		megablast, dc-megablast, blastn [default = megablast]
+-h (--hits)			Number of hits to return [Default = 1]
 -pe (--p_evalue)	Preliminary e-value cutoff for BLAST results [Default = 1e-05]
--h (--hits)		Number of hits to return [Default = 1]
--fe (--f_evalue)	Final e-value cutoff for BLAST results [Default = 1e-75]
+
+# OUTPUT OPTIONS
 -r (--ranks)		Output files by taxonomic ranks [Default: species genus family order class]
+-fe (--f_evalue)	Final e-value cutoff for BLAST results [Default = 1e-75]
+-co (--concat)		Concatenate all results into a single file [Default: off]
 ```
 
 The non-normalized results can be found in the <b>NonNormalized</b> directory, and will look similar to:
@@ -159,6 +170,7 @@ We can use the FASTQ files located in the Example/ folder to test the installati
 ```Bash
 fastq2fasta.pl \
    -f Example/*.fastq \
+   -h 50 \
    -o FASTA \
    -v
 ```
@@ -167,6 +179,7 @@ Options for [fastq2fasta.pl](https://github.com/PombertLab/ID16S/blob/master/fas
 ```
 -f (--fastq)	FASTQ files to convert
 -o (--outdir)	Output directory [Default: ./]
+-h (--headcrop)	Remove the first X nucleotides from 5' ## Useful for nanopore data
 -v (--verbose)	Adds verbosity
 ```
 
@@ -187,13 +200,15 @@ megablast.pl \
 
 Options for [megablast.pl](https://github.com/PombertLab/ID16S/blob/master/megablast.pl) are:
 ```
--k (--task)	megablast, dc-megablast, blastn [default = megablast]
+-k (--task)		megablast, dc-megablast, blastn [default = megablast]
 -q (--query)	fasta file(s) to be queried
--d (--db)	NCBI 16S Microbial Database to query [default = 16S_ribosomal_RNA]
+-d (--db)		NCBI nucleotide database to query [default = 16S_ribosomal_RNA]
 -e (--evalue)	1e-05, 1e-10 or other [default = 1e-05]
 -c (--culling)	culling limit [default = 10]
 -t (--threads)	CPUs to use [default = 10]
 -o (--outdir)	Output directory [Default: ./]
+-x (--taxids)	Restrict search to taxids from file ## one taxid per line
+-n (--ntaxids)	Exclude from search taxids from file ## one taxid per line
 -v (--verbose)	Adds verbosity
 ```
 
@@ -218,11 +233,11 @@ Options for [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxi
 -a (--names)	NCBI names.dmp
 -b (--blast)	NCBI blast output file(s) in outfmt 6 format
 -e (--evalue)	evalue cutoff [Default: 1e-75]
--h (--hits)	Number of BLAST hits to keep; top N hits [Default: 1]
+-h (--hits)		Number of BLAST hits to keep; top N hits [Default: 1]
 -o (--outdir)	Output directory [Default: ./]
 -r (--ranks)	Output files by taxonomic ranks [Default: species genus family order class]
-		# Possible taxonomic rank options are:
-		# subspecies strain species genus family order class phylum superkingdom 'no rank'
+				# Possible taxonomic rank options are:
+				# subspecies strain species genus family order class phylum superkingdom 'no rank'
 -v (--verbose)	Adds verbosity
 ```
 
