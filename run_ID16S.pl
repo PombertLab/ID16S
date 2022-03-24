@@ -117,7 +117,7 @@ if (exists $ENV{"ID16S_HOME"}){
 	$outdir = $ENV{"ID16S_HOME"};
 }
 else {
-	unless($outdir){
+	unless ($outdir){
 		print STDERR ("\$ID16S_HOME is not set as an enviroment variable and -o (--outdir) was not provided.\n");
 		print ("To use run_ID16S.pl, please add \$ID16S_HOME to the enviroment or specify path with -o (--outdir)\n");
 		exit;
@@ -125,7 +125,7 @@ else {
 }
 
 foreach my $dirs (@output_directories){
-	unless(-d $dirs){
+	unless (-d $dirs){
 		make_path($dirs,{mode=>0755});
 	}
 }
@@ -193,7 +193,7 @@ system ("$ID16S_dir/Core_scripts/taxid_dist.pl \\
 ## get_organism_statistics.pl
 ###################################################################################################
 
-opendir(NNORM,$nonnormal_dir) or die("Unable to open $nonnormal_dir: $!\n");
+opendir (NNORM,$nonnormal_dir) or die("Unable to open $nonnormal_dir: $!\n");
 
 foreach my $file (readdir(NNORM)){
 	unless (-d $file){
