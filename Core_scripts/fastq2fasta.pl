@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ## Pombert Lab, 2018
 my $name = 'fastq2fasta.pl';
-my $version = '0.3';
+my $version = '0.3a';
 my $updated = '2022-03-24';
 
 use strict;
@@ -56,7 +56,12 @@ while (my $fastq = shift@fq){
 
 	open FASTQ, "<$gzip", "$fastq" or die "Can't read file: $fastq $!\n";
 	my $basename = fileparse($fastq);
-	$basename =~ s/.\w+$//;
+	if ($fastq =~ /.gz$/){
+		$basename =~ s/.\w+\.gz$//;
+	}
+	else {
+		$basename =~ s/.\w+$//
+	}
 	open FASTA, ">", "${outdir}/$basename.fasta" or die "Can't create file: $basename.fasta $!\n";
 
 	my $line_counter = 0;
