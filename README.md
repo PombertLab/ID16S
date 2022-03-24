@@ -177,11 +177,11 @@ fastq2fasta.pl \
 
 Options for [fastq2fasta.pl](https://github.com/PombertLab/ID16S/blob/master/fastq2fasta.pl) are:
 ```
--f (--fastq)	FASTQ files to convert
--o (--outdir)	Output directory [Default: ./]
--h (--headcrop)	Remove the first X nucleotides from 5' ## Useful for nanopore data
+-f (--fastq)		FASTQ files to convert
+-o (--outdir)		Output directory [Default: ./]
+-h (--headcrop)		Remove the first X nucleotides from 5' ## Useful for nanopore data
 -m (--min_length)	Minimum length (in nt) of reads to keep [Default: 1000]
--v (--verbose)	Adds verbosity
+-v (--verbose)		Adds verbosity
 ```
 
 To perform BLAST homology searches against the NCBI 16S ribosomal RNA database, we can use [megablast.pl](https://github.com/PombertLab/ID16S/blob/master/megablast.pl). This script will generate BLAST outputs with the following format: ***-outfmt '6 qseqid sseqid pident length bitscore evalue staxids sskingdoms sscinames sblastnames'***. This format is required for [taxid_dist.pl](https://github.com/PombertLab/ID16S/blob/master/taxid_dist.pl).
