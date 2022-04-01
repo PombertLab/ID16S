@@ -21,24 +21,23 @@ USAGE		${name} \\
 		  -headcrop 50
 
 GENERAL OPTIONS
+-o (--outdir)		Output directory [Default = ./ID16S]
 -fa (--fasta)		FASTA files to run
 -fq (--fastq)		FASTQ files to convert then run
 -hd (--headcrop)	Remove the first X nucleotides from 5' end of FASTQ sequences ## Useful for Nanopore data
 -m (--min_length)	Minimum read length to keep from FASTQ files [Default: 1000]
 
-ADVANCED OPTIONS
-# ID16S SETTINGS
--o (--outdir)		Output directory [Default = ./ID16S]
+ID16S OPTIONS
 -d (--db)		Path to 16IDS_DB download [Default = \$ID16S_DB]
 
-# BLAST OPTIONS
+BLAST OPTIONS
 -k (--tasks)		megablast, dc-megablast, blastn [default = megablast]
 -t (--threads)		CPUs to use [default = 10]
 -cu (--culling)		Culling limit [default = 10]
 -h (--hits)		Number of hits to return [Default = 1]
 -pe (--p_evalue)	Preliminary e-value cutoff for BLAST results [Default = 1e-05]
 
-# OUTPUT OPTIONS
+OUTPUT OPTIONS
 -r (--ranks)		Output files by taxonomic ranks [Default: species genus family order class]
 -fe (--f_evalue)	Final e-value cutoff for BLAST results [Default = 1e-75]
 -co (--concat)		Concatenate all results into a single file [Default: off]
@@ -51,13 +50,13 @@ die("\n$usage\n") unless(@ARGV);
 ###################################################################################################
 
 ## GENERAL
+my $outdir = './ID16S';
 my @fastq;
 my @fasta;
 my $headcrop;
 my $min_length = 1000;
 
 ## ID16S SETTINGS
-my $outdir = './ID16S';
 my $db;
 
 ## BLAST
