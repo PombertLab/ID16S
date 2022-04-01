@@ -106,19 +106,8 @@ if (exists $ENV{"ID16S_DB"}){
 }
 else {
 	unless ($db){
-		print STDERR ("\$ID16S_DB is not set as an enviroment variable and -d (--db) was not provided.\n");
-		print("To use run_ID16S.pl, please add \$ID16S_DB to the enviroment or specify path with -d (--db)\n");
-		exit;
-	}
-}
-
-if (exists $ENV{"ID16S_HOME"}){
-	$outdir = $ENV{"ID16S_HOME"};
-}
-else {
-	unless ($outdir){
-		print STDERR ("\$ID16S_HOME is not set as an enviroment variable and -o (--outdir) was not provided.\n");
-		print ("To use run_ID16S.pl, please add \$ID16S_HOME to the enviroment or specify path with -o (--outdir)\n");
+		print STDERR ("\$ID16S_DB is not set as an environment variable and -d (--db) was not provided.\n");
+		print("To use run_ID16S.pl, please add \$ID16S_DB to the environment or specify path with -d (--db)\n");
 		exit;
 	}
 }
