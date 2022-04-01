@@ -29,7 +29,7 @@ EXIT
 
 die ("\n$usage\n") unless (@ARGV);
 
-my $path = fileparse($0);
+my ($script, $path) = fileparse($0);
 my $db_path = './ID16S_DB';
 my $config_file = '~/.bashrc';
 
