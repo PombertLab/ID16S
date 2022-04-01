@@ -49,17 +49,17 @@ open CONFIG, ">>", $config_file or die("Unable to access to configuration file $
 ## ID16S_HOME and ID16S_DB variables
 ###################################################################################################
 
-print CONFIG ("\n".'# Adding ID16S home and database variables'."\n");
-print CONFIG ('export ID16S_HOME='.abs_path($path)."\n");
-print CONFIG ('export ID16S_DB='.abs_path($db_path)."\n");
+print CONFIG "\n".'# Adding ID16S home and database variables'."\n";
+print CONFIG 'export ID16S_HOME='.abs_path($path)."\n";
+print CONFIG 'export ID16S_DB='.abs_path($db_path)."\n";
 
-print CONFIG ("\n");
+print CONFIG "\n";
 
 ###################################################################################################
 ## BLASTDB update with TaxDB
 ###################################################################################################
 
-print CONFIG ('# Adding NCBI TaxDB to BLASTDB variable'."\n");
-print CONFIG ('export BLASTDB=$BLASTDB:$ID16_DB/TaxDB'."\n");
+print CONFIG '# Adding NCBI TaxDB to BLASTDB variable'."\n";
+print CONFIG 'export BLASTDB=$BLASTDB:'.$ID16_DB.'/TaxDB'.':'.$ID16_DB.'/NCBI_16S'."\n";
 
 close CONFIG;
