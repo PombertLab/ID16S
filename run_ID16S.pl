@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab 2022
 my $name = "run_ID16S.pl";
-my $version = "0.2a";
-my $updated = "2022-03-24";
+my $version = "0.2b";
+my $updated = "2022-04-01";
 
 use strict;
 use warnings;
@@ -28,7 +28,7 @@ GENERAL OPTIONS
 
 ADVANCED OPTIONS
 # ID16S SETTINGS
--o (--outdir)		Output directory [Default = \$ID16S_HOME]
+-o (--outdir)		Output directory [Default = ./ID16S]
 -d (--db)		Path to 16IDS_DB download [Default = \$ID16S_DB]
 
 # BLAST OPTIONS
@@ -57,7 +57,7 @@ my $headcrop;
 my $min_length = 1000;
 
 ## ID16S SETTINGS
-my $outdir;
+my $outdir = './ID16S';
 my $db;
 
 ## BLAST
