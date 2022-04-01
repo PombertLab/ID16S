@@ -92,15 +92,7 @@ GetOptions(
 	'co|concat=s' => \$concat,
 );
 
-my $fasta_dir = "$outdir/FASTA";
-my $blast_dir = "$outdir/BLAST";
-my $nonnormal_dir = "$outdir/NonNormalized";
-my $normal_dir = "$outdir/Normalized";
-
-my @output_directories = ($fasta_dir,$blast_dir,$nonnormal_dir,$normal_dir);
-
-my ($run_ID16S,$ID16S_dir) = fileparse($0);
-
+## Environment variable(s) check
 if (exists $ENV{"ID16S_DB"}){
 	$db = $ENV{"ID16S_DB"};
 }
@@ -112,11 +104,25 @@ else {
 	}
 }
 
+## Output directory/sub-directories
+unless (-d $outdir){
+	make_path($outdir,{mode=>0755}) or die "Can't create $outdir: $!\n";
+}
+
+my $fasta_dir = "$outdir/FASTA";
+my $blast_dir = "$outdir/BLAST";
+my $nonnormal_dir = "$outdir/NonNormalized";
+my $normal_dir = "$outdir/Normalized";
+
+my @output_directories = ($fasta_dir,$blast_dir,$nonnormal_dir,$normal_dir);
+
 foreach my $dirs (@output_directories){
 	unless (-d $dirs){
 		make_path($dirs,{mode=>0755});
 	}
 }
+
+my ($run_ID16S,$ID16S_dir) = fileparse($0);
 
 ###################################################################################################
 ## run fastq2fasta.pl
