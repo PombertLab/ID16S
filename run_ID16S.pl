@@ -146,7 +146,7 @@ if (@fastq){
 			  --fastq @fastq \\
 			  --outdir $fasta_dir \\
 			  --min_length $min_length \\
-			  $headcrop
+			  $crop_5end
 	");
 }
 else {
