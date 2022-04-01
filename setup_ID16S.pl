@@ -7,8 +7,9 @@ my $updated = '2022-04-01';
 use strict;
 use warnings;
 use Getopt::Long qw(GetOptions);
-use Cwd qw(abs_path);
+use File::Basename;
 use File::Path qw(make_path);
+use Cwd qw(abs_path);
 
 my $usage = <<"EXIT";
 NAME		${name}
@@ -19,7 +20,7 @@ SYNOPSIS	Creates and stores ID16S environment variables to a configuration file.
 USAGE		${name} \\
 		  -c ID16S.sh \\
 		  -d ./ID16S_DB \\
-		  -i ./ID16S_WD
+		  -i ./
 
 OPTIONS
 -c (--config)	Configuration file [Default: ~/.bashrc]
@@ -29,7 +30,7 @@ EXIT
 
 die ("\n$usage\n") unless (@ARGV);
 
-my $path = './';
+my $path = fileparse($0);
 my $db_path = './ID16S_DB';
 my $config_file = '~/.bashrc';
 
