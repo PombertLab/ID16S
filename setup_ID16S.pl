@@ -23,7 +23,7 @@ USAGE		${name} \\
 
 OPTIONS
 -c (--config)	Configuration file [Default: ~/.bashrc]
--d (--db_dir)	Desired directory to download NCBI databases
+-d (--db_dir)	Desired directory to download NCBI databases [Default: ./ID16S_DB]
 -i (--inst_dir)	ID16S installation directory [Default: ./] 
 EXIT
 
