@@ -60,6 +60,6 @@ print CONFIG "\n";
 ###################################################################################################
 
 print CONFIG '# Adding NCBI TaxDB to BLASTDB variable'."\n";
-print CONFIG 'export BLASTDB=$BLASTDB:'.$ID16_DB.'/TaxDB:'.$ID16_DB.'/NCBI_16S'."\n";
+print CONFIG 'export BLASTDB=$BLASTDB:'.$ID16S_DB.'/TaxDB:'.$ID16S_DB.'/NCBI_16S'."\n";
 
 close CONFIG;
