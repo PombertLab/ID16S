@@ -19,8 +19,7 @@ SYNOPSIS	Creates and stores ID16S environment variables to a configuration file.
 
 USAGE		${name} \\
 		  -c ID16S.sh \\
-		  -d ./ID16S_DB \\
-		  -i ./
+		  -d ./ID16S_DB
 
 OPTIONS
 -c (--config)	Configuration file [Default: ~/.bashrc]
