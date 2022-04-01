@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab 2022
 my $name = 'setup_ID16S.pl';
-my $version = '0.1a';
-my $updated = '2022-03-21';
+my $version = '0.2';
+my $updated = '2022-04-01';
 
 use strict;
 use warnings;
@@ -19,32 +19,28 @@ SYNOPSIS	Creates and stores ID16S environment variables to a configuration file.
 USAGE		${name} \\
 		  -c ID16S.sh \\
 		  -d ./ID16S_DB \\
-		  -w ./ID16S_WD
+		  -i ./ID16S_WD
 
 OPTIONS
 -c (--config)	Configuration file [Default: ~/.bashrc]
 -d (--db_dir)	Desired directory to download NCBI databases
--w (--work_dir)	Desired working directory for ID16S
+-i (--inst_dir)	ID16S installation directory [Default: ./] 
 EXIT
 
 die ("\n$usage\n") unless (@ARGV);
 
-my $path = './ID16S';
+my $path = './';
 my $db_path = './ID16S_DB';
 my $config_file = '~/.bashrc';
 
 GetOptions(
-	'w|work_dir=s' => \$path,
+	'i|inst_dir=s' => \$path,
 	'd|db_dir=s' => \$db_path,
 	'c|config=s' => \$config_file,
 );
 
-unless (-d $path){
-	make_path($path,{mode=>0755}) or die("Unable to create database directory $path: $!\n");
-}
-
 unless (-d $db_path){
-	make_path($db_path,{mode=>0755}) or die("Unable to create database directory $path: $!\n");
+	make_path($db_path,{mode=>0755}) or die("Unable to create database directory $db_path: $!\n");
 }
 
 open CONFIG, ">>", $config_file or die("Unable to access to configuration file $config_file: $!\n");
