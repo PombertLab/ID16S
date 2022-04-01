@@ -28,7 +28,7 @@ GENERAL OPTIONS
 -m (--min_length)	Minimum read length to keep from FASTQ files [Default: 1000]
 
 ID16S OPTIONS
--d (--db)		Path to 16IDS_DB download [Default = \$ID16S_DB]
+-d (--db)		Path to ID16S databases [Default = \$ID16S_DB]
 
 BLAST OPTIONS
 -k (--tasks)		megablast, dc-megablast, blastn [default = megablast]
