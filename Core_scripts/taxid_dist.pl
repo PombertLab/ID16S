@@ -31,9 +31,9 @@ COMMAND		${name} \\
 		  -v
 
 OPTIONS:
--n (--nodes)	NCBI nodes.dmp file 
--a (--names)	NCBI names.dmp
--b (--blast)	NCBI blast output file(s) in outfmt 6 format
+-n (--nodes)	NCBI nodes.dmp file location 
+-a (--names)	NCBI names.dmp file location
+-b (--blast)	NCBI blast file(s) in outfmt 6 format
 -e (--evalue)	evalue cutoff [Default: 1e-75]
 -h (--hits)	Number of BLAST hits to keep; top N hits [Default: 1]
 -o (--outdir)	Output directory [Default: ./]
@@ -63,9 +63,15 @@ GetOptions(
 	'v|verbose' => \$verbose
 );
 
-## Check if blast file is entered
+## Check for blast, names and nodes files
 unless (@blast){
 	die "\nPlease enter at least one BLAST file as input with the -b command line switch\n\n";
+}
+unless ($node){
+	die "\nPlease specify the NCBI nodes.dmp file with the -n command line switch\n\n";
+}
+unless ($namedmp){
+	die "\nPlease specify the NCBI names.dmp file with the -a command line switch\n\n";
 }
 
 ## Initializing taxids -> names database
