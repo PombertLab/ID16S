@@ -4,7 +4,10 @@ my $name = 'taxid_dist.pl';
 my $version = '0.8c';
 my $updated = '2022-04-08';
 
-use strict; use warnings; use Getopt::Long qw(GetOptions); use File::Basename;
+use strict;
+use warnings;
+use Getopt::Long qw(GetOptions);
+use File::Basename;
 
 ### Defining options
 my $options = <<"OPTIONS";
