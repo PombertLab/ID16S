@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab, 2018
 my $name = 'taxid_dist.pl';
-my $version = '0.8b';
-my $updated = '2021-03-22';
+my $version = '0.8c';
+my $updated = '2022-04-08';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions); use File::Basename;
 
@@ -46,7 +46,7 @@ die "\n$options\n" unless @ARGV;
 
 my $node;
 my $namedmp;
-my @blast = ();
+my @blast;
 my $evalue = 1e-75;
 my $maxhits = 1;
 my $outdir = './';
@@ -62,6 +62,11 @@ GetOptions(
 	'r|ranks=s@{1,}' => \@ranks,
 	'v|verbose' => \$verbose
 );
+
+## Check if blast file is entered
+unless (@blast){
+	die "\nPlease enter at least one BLAST file as input with the -b command line switch\n\n";
+}
 
 ## Initializing taxids -> names database
 my %taxid;
