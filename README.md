@@ -1,3 +1,7 @@
+# ID16S – 16S amplicon identification
+
+<a href="https://doi.org/10.5281/zenodo.6587303"><p align="right"><img src="https://zenodo.org/badge/300303510.svg" al
+
 ## Table of contents
 * [Introduction](#Introduction)
 * [Dependencies](#Dependencies)
