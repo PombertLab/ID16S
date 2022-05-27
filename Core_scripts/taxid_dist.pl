@@ -182,7 +182,7 @@ while (my $blast = shift@blast){
 }
 
 ## Subroutine
-sub lineage{
+sub lineage {
 	my $id = $staxids;
 	for (0..20){
 		my $rank = $taxid{$id}[1]; ## Taxonomic rank could be strain, species, genus, family...
