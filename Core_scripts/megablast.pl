@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT 2018
 my $name = 'megablast.pl';
-my $version = '0.4';
-my $updated = '2022-02-15';
+my $version = '0.4a';
+my $updated = '2022-05-27';
 
 use strict;
 use warnings;
@@ -91,7 +91,7 @@ while (my $query = shift@query){
 
 	## Running BLAST
 	if ($verbose){ print "Running $task on $query...\n"; }
-	system "blastn \\
+	system ("blastn \\
 		-task $task \\
 		-num_threads $threads \\
 		-query $query \\
@@ -100,7 +100,7 @@ while (my $query = shift@query){
 		-culling_limit $culling \\
 		$taxonomic_restrictions \\
 		-outfmt '6 qseqid sseqid pident length bitscore evalue staxids sskingdoms sscinames sblastnames' \\
-		-out ${outdir}/$basename.$task";
+		-out ${outdir}/$basename.$task") == 0 or checksig();
 	
 	## Checking for queries without hits in BLAST homology searches
 	if ($verbose){ print "Checking for sequences in $query with no hits using $task against $db...\n"; }
@@ -122,3 +122,21 @@ while (my $query = shift@query){
 	}
 }
 
+### Subroutine(s)
+sub checksig {
+
+	my $exit_code = $?;
+	my $modulo = $exit_code % 255;
+
+	print "\nExit code = $exit_code; modulo = $modulo \n";
+
+	if ($modulo == 2) {
+		print "\nSIGINT detected: Ctrl+C => exiting...\n";
+		exit(2);
+	}
+	elsif ($modulo == 131) {
+		print "\nSIGTERM detected: Ctrl+\\ => exiting...\n";
+		exit(131);
+	}
+
+}
