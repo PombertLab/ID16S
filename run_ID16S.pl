@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab 2022
 my $name = "run_ID16S.pl";
-my $version = "0.2b";
-my $updated = "2022-04-01";
+my $version = "0.2c";
+my $updated = "2022-05-27";
 
 use strict;
 use warnings;
@@ -147,7 +147,7 @@ if (@fastq){
 			  --outdir $fasta_dir \\
 			  --min_length $min_length \\
 			  $crop_5end
-	");
+	") == 0 or checksig();
 }
 else {
 	die ("FASTQ or FASTA files are required by run_ID16S.pl\n");
@@ -166,7 +166,7 @@ system ("$ID16S_dir/Core_scripts/megablast.pl \\
 		  --culling $culling \\
 		  --threads $threads \\
 		  --outdir $blast_dir
-");
+") == 0 or checksig();
 
 ###################################################################################################
 ## run taxid_dist.pl
@@ -181,7 +181,7 @@ system ("$ID16S_dir/Core_scripts/taxid_dist.pl \\
 		  --hits $hits \\
 		  --ranks @ranks \\
 		  --outdir $nonnormal_dir
-");
+") == 0 or checksig();
 
 ###################################################################################################
 ## get_organism_statistics.pl
@@ -196,6 +196,27 @@ foreach my $file (readdir(NNORM)){
 				  --db $db/Normalization_DB \\
 				  --name $db/TaxDump/names.dmp \\
 				  --output $normal_dir;
-		");
+		") == 0 or checksig();
 	}
+}
+
+###################################################################################################
+## Subroutine(s)
+###################################################################################################
+sub checksig {
+
+	my $exit_code = $?;
+	my $modulo = $exit_code % 255;
+
+	print "\nExit code = $exit_code; modulo = $modulo \n";
+
+	if ($modulo == 2) {
+		print "\nSIGINT detected: Ctrl+C => exiting...\n";
+		exit(2);
+	}
+	elsif ($modulo == 131) {
+		print "\nSIGTERM detected: Ctrl+\\ => exiting...\n";
+		exit(131);
+	}
+
 }
