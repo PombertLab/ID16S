@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab 2022
 my $name = "download_ID16S_dbs.pl";
-my $version = "0.1a";
-my $updated = "2022-02-24";
+my $version = "0.1b";
+my $updated = "2022-05-27";
 
 use strict;
 use warnings;
@@ -73,7 +73,12 @@ foreach my $dir (@dirs){
 ###################################################################################################
 ## Downloading NCBI 16S Database
 ###################################################################################################
-system "wget ftp://ftp.ncbi.nih.gov/blast/db/16S_ribosomal_RNA.tar.gz -O $NCBI_16S_dir/16S_ribosomal_RNA.tar.gz";
+
+system ("wget \\
+	ftp://ftp.ncbi.nih.gov/blast/db/16S_ribosomal_RNA.tar.gz \\
+	-O $NCBI_16S_dir/16S_ribosomal_RNA.tar.gz
+") == 0 or checksig();
+
 system "tar -zxvf $NCBI_16S_dir/16S_ribosomal_RNA.tar.gz --directory $NCBI_16S_dir";
 system "rm $NCBI_16S_dir/16S_ribosomal_RNA.tar.gz";
 
@@ -81,7 +86,11 @@ system "rm $NCBI_16S_dir/16S_ribosomal_RNA.tar.gz";
 ## Downloading NCBI Taxonomy Database
 ###################################################################################################
 
-system "wget ftp://ftp.ncbi.nih.gov/blast/db/taxdb.tar.gz -O $TaxDB_dir/taxdb.tar.gz";
+system ("wget \\
+	ftp://ftp.ncbi.nih.gov/blast/db/taxdb.tar.gz \\
+	-O $TaxDB_dir/taxdb.tar.gz
+") == 0 or checksig();
+
 system "tar -zxvf $TaxDB_dir/taxdb.tar.gz --directory $TaxDB_dir";
 system "rm $TaxDB_dir/taxdb.tar.gz";
 
@@ -89,8 +98,12 @@ system "rm $TaxDB_dir/taxdb.tar.gz";
 ## Downloading NCBI Taxonomy dump Files
 ###################################################################################################
 
-system "wget ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz -O $TaxDump_dir/taxdump.tar.gz";
-system "tar -zxvf $TaxDump_dir/taxdump.tar.gz --directory $TaxDump_dir";
+system "wget \\
+	ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz \\
+	-O $TaxDump_dir/taxdump.tar.gz
+") == 0 or checksig();
+
+system "tar -zxvf $TaxDump_dir/taxdump.tar.gz --directory $TaxDump_dir" ) == 0 or checksig();
 system "rm $TaxDump_dir/taxdump.tar.gz";
 
 ###################################################################################################
@@ -120,11 +133,14 @@ if (defined $make){
 	}
 	VERIFIED:
 	print "\nDownloading datasets program from NCBI\n";
-	system "curl https://ftp.ncbi.nlm.nih.gov/pub/datasets/command-line/LATEST/linux-amd64/datasets -o $genomes_dir/datasets";
+	system ("curl \\
+		https://ftp.ncbi.nlm.nih.gov/pub/datasets/command-line/LATEST/linux-amd64/datasets \\
+		-o $genomes_dir/datasets
+	") == 0 or checksig();
 	system "chmod +x $outdir/datasets";
 
 	unless (-d "$genomes_dir/ncbi_datasets.zip"){
-		system "$outdir/datasets \\
+		system ("$outdir/datasets \\
 				  download \\
 				  genome \\
 				  taxon 'bacteria' \\
@@ -138,7 +154,7 @@ if (defined $make){
 				  --assembly-source refseq \\
 				  --annotated \\
 				  --filename $genomes_dir/ncbi_dataset.zip
-		";
+		") == 0 or checksig();
 	}
 
 	system "unzip $genomes_dir/ncbi_dataset.zip";
@@ -155,5 +171,24 @@ if (defined $make){
 }
 else{
 	system "cp $ID16S_dir/Normalization_scripts/Prebuilt_Normalization_DB/*.* $normal_dir/";
+}
+
+### Subroutine(s)
+sub checksig {
+
+	my $exit_code = $?;
+	my $modulo = $exit_code % 255;
+
+	print "\nExit code = $exit_code; modulo = $modulo \n";
+
+	if ($modulo == 2) {
+		print "\nSIGINT detected: Ctrl+C => exiting...\n";
+		exit(2);
+	}
+	elsif ($modulo == 131) {
+		print "\nSIGTERM detected: Ctrl+\\ => exiting...\n";
+		exit(131);
+	}
+
 }
 
